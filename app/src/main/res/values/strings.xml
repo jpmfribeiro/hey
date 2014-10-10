@@ -6,4 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="facebook_login">login with</string>
 
+    <string name="facebook_app_id">596219200500489</string>
+
 </resources>
