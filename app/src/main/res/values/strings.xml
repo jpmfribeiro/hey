@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="facebook_login">login with</string>
-
     <string name="facebook_app_id">596219200500489</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
