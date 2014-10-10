@@ -9,6 +9,13 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/libs/facebook-android-sdk-3.19.0/facebook" />
+            <option value="$PROJECT_DIR$/libs/facebook-android-sdk-3.19.0/samples/FriendPickerSample" />
+            <option value="$PROJECT_DIR$/libs/facebook-android-sdk-3.19.0/samples/HelloFacebookSample" />
+            <option value="$PROJECT_DIR$/libs/facebook-android-sdk-3.19.0/samples/PlacePickerSample" />
+            <option value="$PROJECT_DIR$/libs/facebook-android-sdk-3.19.0/samples/RPSSample" />
+            <option value="$PROJECT_DIR$/libs/facebook-android-sdk-3.19.0/samples/Scrumptious" />
+            <option value="$PROJECT_DIR$/libs/facebook-android-sdk-3.19.0/samples/SwitchUserSample" />
           </set>
         </option>
       </GradleProjectSettings>

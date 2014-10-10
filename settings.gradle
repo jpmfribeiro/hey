@@ -1,1 +1,8 @@
-include ':app'
+include ':app', ':facebook', ':HelloFacebookSample', ':RPSSample', ':FriendPickerSample', ':PlacePickerSample', ':SwitchUserSample', ':Scrumptious'
+project(':facebook').projectDir = new File('libs/facebook-android-sdk-3.19.0/facebook')
+project(':HelloFacebookSample').projectDir = new File('libs/facebook-android-sdk-3.19.0/samples/HelloFacebookSample')
+project(':RPSSample').projectDir = new File('libs/facebook-android-sdk-3.19.0/samples/RPSSample')
+project(':FriendPickerSample').projectDir = new File('libs/facebook-android-sdk-3.19.0/samples/FriendPickerSample')
+project(':PlacePickerSample').projectDir = new File('libs/facebook-android-sdk-3.19.0/samples/PlacePickerSample')
+project(':SwitchUserSample').projectDir = new File('libs/facebook-android-sdk-3.19.0/samples/SwitchUserSample')
+project(':Scrumptious').projectDir = new File('libs/facebook-android-sdk-3.19.0/samples/Scrumptious')
