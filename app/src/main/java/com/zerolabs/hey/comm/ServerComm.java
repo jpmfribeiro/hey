@@ -138,14 +138,14 @@ public class ServerComm {
 
     public void getUsersFromMacAddresses(List<String> macAddresses, final OnGetUsersListener listener) {
 
-        String username = Settings.getUsername(mContext);
+        String userid = Settings.getUserid(mContext);
 
-        if(TextUtils.isEmpty(username)) {
+        if(TextUtils.isEmpty(userid)) {
             Log.e(LOG_TAG, "getUsersFromMacAddresses > Username returned empty!");
             return;
         }
 
-        UsersFromMacRequestMessage message = new UsersFromMacRequestMessage(macAddresses, username);
+        UsersFromMacRequestMessage message = new UsersFromMacRequestMessage(macAddresses, userid);
         JSONObject usersFromMacJson;
         try {
             usersFromMacJson = message.toJson();
@@ -154,11 +154,14 @@ public class ServerComm {
             return;
         }
 
+        Log.d(LOG_TAG, "Request is " + usersFromMacJson.toString());
+
         // Make Volley JSONObjectRequest
         JsonObjectRequest usersFromMacRequest = new JsonObjectRequest
                 (Request.Method.POST, ServerHelper.USERS_FROM_MAC_URL, usersFromMacJson, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonResponse) {
+                        Log.d(LOG_TAG, "Response is " + jsonResponse.toString());
                         boolean successful;
                         UsersFromMacResponseMessage response = new UsersFromMacResponseMessage(jsonResponse);
                         List<User> users = null;

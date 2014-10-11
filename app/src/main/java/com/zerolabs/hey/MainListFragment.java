@@ -54,8 +54,14 @@ public class MainListFragment extends Fragment {
                         mServerComm.getUsersFromMacAddresses(MACList, new ServerComm.OnGetUsersListener() {
                             @Override
                             public void onResponse(boolean successful, List<User> retrievedUsers) {
-                                Log.v(getClass().toString(), retrievedUsers.toString());
-                                setNearUsers(retrievedUsers);
+                                if(successful) {
+                                    Log.v(getClass().toString(), retrievedUsers.toString());
+                                    setNearUsers(retrievedUsers);
+                                }
+                                else
+                                {
+                                    Log.v(getClass().toString(), "unsuccessful");
+                                }
                             }
 
                             @Override
@@ -117,6 +123,27 @@ public class MainListFragment extends Fragment {
             }
             if(!foundOld){
                 View newView = LayoutInflater.from(getActivity()).inflate(R.layout.main_list_item, listRootView, false);
+
+                newView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Boolean isActivated = viewIsActivatedHashMap.get(view);
+                        if(!isActivated){
+                            view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
+                            viewIsActivatedHashMap.put(view, true);
+                            //TODO user wants to hey the other user
+                        }
+                        else{
+                            //view.animate().alpha(0).setDuration(1000).start();
+                            view.setBackgroundColor(0x00000000);
+                            viewIsActivatedHashMap.put(view, false);
+                            //TODO user doesn't want to hey the other user
+                        }
+
+                    }
+                });
+
+
                 ((TextView)newView.findViewById(R.id.profile_username_textview)).setText(newUser.getUsername());
                 newView.setOnClickListener(new View.OnClickListener() {
                     @Override

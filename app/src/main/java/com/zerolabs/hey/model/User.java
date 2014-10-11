@@ -192,14 +192,24 @@ public class User {
 
         JSONObject birthdateJson = new JSONObject();
         GregorianCalendar birthdateCal = (GregorianCalendar)Calendar.getInstance();
-        birthdateCal.setTime(getBirthdate());
-        birthdateJson.put(JSONRep.KEY_YEAR, birthdateCal.get(Calendar.YEAR));
-        birthdateJson.put(JSONRep.KEY_MONTH, birthdateCal.get(Calendar.MONTH) + 1);
-        birthdateJson.put(JSONRep.KEY_DAY, birthdateCal.get(Calendar.DAY_OF_MONTH));
-
-        userJson.put(JSONRep.KEY_BIRTHDATE, birthdateJson);
+        Date birthdate = getBirthdate();
+        if(birthdate != null) {
+            Log.d(LOG_TAG, "birthdate not null");
+            birthdateCal.setTime(birthdate);
+            birthdateJson.put(JSONRep.KEY_YEAR, birthdateCal.get(Calendar.YEAR));
+            birthdateJson.put(JSONRep.KEY_MONTH, birthdateCal.get(Calendar.MONTH) + 1);
+            birthdateJson.put(JSONRep.KEY_DAY, birthdateCal.get(Calendar.DAY_OF_MONTH));
+            userJson.put(JSONRep.KEY_BIRTHDATE, birthdateJson);
+        } else {
+            birthdateJson.put(JSONRep.KEY_YEAR, 1992);
+            birthdateJson.put(JSONRep.KEY_MONTH, 12);
+            birthdateJson.put(JSONRep.KEY_DAY, 2);
+            userJson.put(JSONRep.KEY_BIRTHDATE, birthdateJson);
+        }
         userJson.put(JSONRep.KEY_USERID, getUserId());
-        userJson.put(JSONRep.KEY_CITY, getCity());
+        String city = getCity();
+        if (city != null)  userJson.put(JSONRep.KEY_CITY, getCity());
+        else userJson.put(JSONRep.KEY_CITY, "Zurich");
         userJson.put(JSONRep.KEY_GCMID, getGCMId());
         userJson.put(JSONRep.KEY_GENDER, isMale() ? JSONRep.VALUE_MALE : JSONRep.VALUE_MALE);
         userJson.put(JSONRep.KEY_LIKES_FEMALE, likesFemale());
@@ -217,7 +227,7 @@ public class User {
 
         resultUser.setCity(userJson.optString(JSONRep.KEY_CITY));
         resultUser.setAccessToken(userJson.optString(JSONRep.KEY_ACCESS_TOKEN));
-        resultUser.setBirthdate(FormatHelper.getDateFromString(userJson.optString(JSONRep.KEY_BIRTHDATE)));
+// TODO        resultUser.setBirthdate(FormatHelper.getDateFromString(userJson.optString(JSONRep.KEY_BIRTHDATE)));
         resultUser.setGender(userJson.optBoolean(JSONRep.KEY_GENDER, true));
         resultUser.setLikesFemale(userJson.optBoolean(JSONRep.KEY_LIKES_FEMALE, true));
         resultUser.setLikesMale(userJson.optBoolean(JSONRep.KEY_LIKES_MALE, true));
