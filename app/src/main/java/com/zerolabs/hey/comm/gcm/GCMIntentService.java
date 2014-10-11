@@ -6,13 +6,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.zerolabs.hey.MainActivity;
+import com.zerolabs.hey.model.User;
 
 /**
  * Created by jpedro on 11.10.14.
@@ -46,27 +46,62 @@ public class GCMIntentService extends IntentService {
              */
             if (GoogleCloudMessaging.
                     MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
+                Log.d(LOG_TAG, "Send error: " + extras.toString());
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " +
+                Log.d(LOG_TAG, "Deleted messages on server: " +
                         extras.toString());
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
 
-                Log.i(LOG_TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
-                Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(500);
+                Log.d(LOG_TAG, "Received: " + extras.toString());
+
+                // This loop represents the service doing some work.
+                if (extras.getInt(Hey.KEY_IS_HEY) == 1) {
+                    Hey hey = new Hey(extras);
+
+                    Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(VIBRATOR_SERVICE);
+                    vibrator.vibrate(500);
+
+                    receiveHey(hey);
+                } else {
+//                    Talk talk = new Talk(extras);
+
+
+                }
+
                 Log.i(LOG_TAG, "Received: " + extras.toString());
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         GCMBroadcastReceiver.completeWakefulIntent(intent);
     }
+
+
+    private void receiveHey(Hey hey) {
+        User sender = hey.getSender();
+
+        mNotificationManager = (NotificationManager)
+                this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), 0);
+
+        String msg = sender.getUsername() + " sent you a hey!";
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setContentTitle("hey!")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(msg))
+                        .setContentText(msg);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
 
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
@@ -80,7 +115,7 @@ public class GCMIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setContentTitle("GCM Notification")
+                        .setContentTitle("")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg);
