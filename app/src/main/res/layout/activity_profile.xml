@@ -128,8 +128,8 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="10 - 15"
-                android:textSize="@dimen/profile_text_size"
-                android:background="@drawable/round_style_edittextnf"/>
+                android:id="@+id/age_range_number_textview"
+                android:textSize="@dimen/profile_text_size"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,13 +137,21 @@
                 android:text="@string/years"/>
 
         </LinearLayout>
-        <SeekBar
+        <!--<SeekBar
             android:layout_width="fill_parent"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="5dp"
             android:layout_marginBottom="20dp"
             android:max="80"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" />-->
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="20dp"
+            android:max="80"
+            android:layout_height="wrap_content"
+            android:id="@+id/rangeSeekBarFrame"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -153,6 +161,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="submit"
                 android:textSize="@dimen/profile_text_size"
                 android:text="@string/done"/>
             </LinearLayout>

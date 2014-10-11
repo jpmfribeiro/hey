@@ -66,6 +66,13 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".MeetActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:label="@string/title_activity_meet" >
+
+        </activity>
     </application>
 
 </manifest>

@@ -2,18 +2,24 @@ package com.zerolabs.hey;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.facebook.FacebookRequestError;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.ProfilePictureView;
+import com.zerolabs.hey.UIHelper.RangeSeekBar;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
 
@@ -44,6 +50,24 @@ public class ProfileActivity extends Activity {
         mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
         mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
         mGenderTextView = (TextView)findViewById(R.id.profile_gender_textview);
+        mMenCheckBox = (CheckBox)findViewById(R.id.men_checkbox);
+        mWomenCheckBox = (CheckBox)findViewById(R.id.women_checkbox);
+        mAgeRangeTextView = (TextView)findViewById(R.id.age_range_number_textview);
+        mAgeRangeSeekBar = new RangeSeekBar<Integer>(16, 55, context);
+        ((ViewGroup)findViewById(R.id.rangeSeekBarFrame)).addView(mAgeRangeSeekBar);
+        mAgeRangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                if(maxValue!=55) {
+                    mAgeRangeTextView.setText(" " + minValue + "-" + maxValue + " ");
+                } else {
+                    mAgeRangeTextView.setText(" " + minValue + "-" + maxValue + "+");
+                }
+            }
+        });
+
+        mAgeRangeSeekBar.setNotifyWhileDragging(true);
+
         mProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
         mProfilePictureView.setCropped(true);
         mServerComm = new ServerComm(this);
@@ -56,10 +80,15 @@ public class ProfileActivity extends Activity {
             mServerComm.getFacebookData(mFacebookSession, new ServerComm.OnGetFacebookDataListener() {
                 @Override
                 public void onResponse(User user) {
-                    mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
+                    //mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
                     //mLocationTextView.setText(user.getCity());
                     mGenderTextView.setText(user.isMale() ? "man" : "woman");
                     mProfilePictureView.setProfileId(user.getUserId());
+                    mAgeRangeSeekBar.setSelectedMinValue(user.getMinAge());
+                    mAgeRangeSeekBar.setSelectedMaxValue(user.getMaxAge());
+                    mWomenCheckBox.setChecked(user.likesFemale());
+                    mMenCheckBox.setChecked(user.likesMale());
+                    mUser = user;
                 }
 
                 @Override
@@ -86,17 +115,50 @@ public class ProfileActivity extends Activity {
         mUiHelper.onDestroy();
     }
 
+    public void submit(View view){
+        mUser.setLikesFemale(mWomenCheckBox.isChecked());
+        mUser.setLikesMale(mMenCheckBox.isChecked());
+        mUser.setMinAge(mAgeRangeSeekBar.getSelectedMinValue());
+        mUser.setMaxAge(mAgeRangeSeekBar.getSelectedMaxValue());
+        mServerComm.registerUser(mUser, new ServerComm.OnRegisterUserListener() {
+            @Override
+            public void onResponse(boolean successful) {
+                if(successful) {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(context, "saved settings", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                else {
+                    Toast.makeText(context, "error while saving settings", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "error while saving settings: "+error.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mUiHelper.onSaveInstanceState(outState);
     }
 
+    User mUser;
+
     ServerComm mServerComm;
     TextView mUserNameTextView;
     TextView mLocationTextView;
     TextView mGenderTextView;
     Session mFacebookSession;
+    CheckBox mWomenCheckBox;
+    CheckBox mMenCheckBox;
+    TextView mAgeRangeTextView;
+    RangeSeekBar<Integer> mAgeRangeSeekBar;
     private ProfilePictureView mProfilePictureView;
 
     @Override

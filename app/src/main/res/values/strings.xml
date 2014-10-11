@@ -11,8 +11,8 @@
     <string name="interested_in">interested in</string>
     <string name="women">women</string>
     <string name="men">men</string>
-    <string name="age">age </string>
-    <string name="years"> years</string>
+    <string name="age">age   </string>
+    <string name="years">   years</string>
     <string name="done">done</string>
 
     <!-- PREFERENCES -->
@@ -27,5 +27,6 @@
     <string name="pref_birthdate" translatable="false">birthdate</string>
     <string name="pref_likesmale" translatable="false">likes_male</string>
     <string name="pref_likesfemale" translatable="false">likes_female</string>
+    <string name="title_activity_meet">MeetActivity</string>
 
 </resources>
