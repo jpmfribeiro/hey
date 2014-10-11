@@ -33,6 +33,18 @@ public class Settings {
 
     }
 
+    public static String getUsername(Context context) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return settings.getString(context.getString(R.string.pref_username), "");
+    }
+
+    public static String getUserid(Context context) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return settings.getString(context.getString(R.string.pref_userid), "");
+    }
+
     public static User getUser(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 

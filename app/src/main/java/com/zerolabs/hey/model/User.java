@@ -219,29 +219,29 @@ public class User {
 // REPRESENTATION HELPER CLASSES
 
     public static class JSONRep {
-        public static String KEY_USERID         = "userid";
-        public static String KEY_GCMID          = "gcm_id";
-        public static String KEY_USERNAME       = "username";
-        public static String KEY_ACCESS_TOKEN   = "access_token";
-        public static String KEY_MAC_ADDRESS    = "mac_address";
+        public static String KEY_USERID         = "facebookid";
+        public static String KEY_GCMID          = "gcmregistrationid";
+        public static String KEY_USERNAME       = "name";
+        public static String KEY_ACCESS_TOKEN   = "accesstoken";
+        public static String KEY_MAC_ADDRESS    = "macaddress";
         public static String KEY_CITY           = "city";
 
-        public static String KEY_BIRTHDATE      = "birthdate";
+        public static String KEY_BIRTHDATE      = "birthday";
         public static String KEY_YEAR           = "year";
         public static String KEY_MONTH          = "month";
         public static String KEY_DAY            = "day";
 
-        public static String KEY_MIN_AGE        = "min_age";
-        public static String KEY_MAX_AGE        = "max_age";
+        public static String KEY_MIN_AGE        = "talkstominage";
+        public static String KEY_MAX_AGE        = "talkstomaxage";
         public static int DEFAULT_MAX_AGE       = 120;
         public static int DEFAULT_MIN_AGE       = 0;
 
         public static String KEY_GENDER         = "gender";
-        public static String VALUE_MALE         = "male";
-        public static String VALUE_FEMALE       = "female";
+        public static String VALUE_MALE         = "M";
+        public static String VALUE_FEMALE       = "W";
 
-        public static String KEY_LIKES_MALE     = "likes_male";
-        public static String KEY_LIKES_FEMALE   = "likes_female";
+        public static String KEY_LIKES_MALE     = "talkstomale";
+        public static String KEY_LIKES_FEMALE   = "talkstofemale";
     }
 
 }

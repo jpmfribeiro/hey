@@ -10,7 +10,7 @@ public abstract class ResponseMessage {
 
     // CONSTANTS
 
-    public static String KEY_SUCCESSFUL = "successful";
+    public static String KEY_SUCCESSFUL = "success";
 
     // ATTRIBUTES
 

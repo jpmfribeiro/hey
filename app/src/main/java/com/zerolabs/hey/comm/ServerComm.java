@@ -1,6 +1,8 @@
 package com.zerolabs.hey.comm;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -11,6 +13,8 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.FacebookRequestError;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
+import com.zerolabs.hey.comm.messages.HeyRequestMessage;
+import com.zerolabs.hey.comm.messages.HeyResponseMessage;
 import com.zerolabs.hey.comm.messages.UsersFromMacRequestMessage;
 import com.zerolabs.hey.comm.messages.RegisterRequestMessage;
 import com.zerolabs.hey.comm.messages.RegisterResponseMessage;
@@ -27,6 +31,10 @@ import java.util.List;
  * Created by jpedro on 11.10.14.
  */
 public class ServerComm {
+
+// CONSTANTS
+
+    private static String LOG_TAG = ServerComm.class.getSimpleName();
 
 // ATTRIBUTES
 
@@ -110,7 +118,13 @@ public class ServerComm {
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onErrorResponse(volleyError);
                     }
-                });
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
 
         // add to queue
         mQueue.add(registerRequest);
@@ -118,7 +132,14 @@ public class ServerComm {
 
     public void getUsersFromMacAddresses(List<String> macAddresses, final OnGetUsersListener listener) {
 
-        UsersFromMacRequestMessage message = new UsersFromMacRequestMessage(macAddresses);
+        String username = Settings.getUsername(mContext);
+
+        if(TextUtils.isEmpty(username)) {
+            Log.e(LOG_TAG, "getUsersFromMacAddresses > Username returned empty!");
+            return;
+        }
+
+        UsersFromMacRequestMessage message = new UsersFromMacRequestMessage(macAddresses, username);
         JSONObject usersFromMacJson;
         try {
             usersFromMacJson = message.toJson();
@@ -159,14 +180,72 @@ public class ServerComm {
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onErrorResponse(volleyError);
                     }
-                });
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
 
         // add to queue
         mQueue.add(usersFromMacRequest);
     }
 
     public void sendHey(User userToHey, final OnHeyListener listener) {
-        // TODO
+
+        String userid = Settings.getUserid(mContext);
+
+        if(TextUtils.isEmpty(userid)) {
+            Log.e(LOG_TAG, "sendHey > Userid returned empty!");
+            return;
+        }
+
+        HeyRequestMessage message = new HeyRequestMessage(userid, userToHey.getUserId());
+        JSONObject heyJson;
+        try {
+            heyJson = message.toJson();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Make Volley JSONObjectRequest
+        JsonObjectRequest heyRequest = new JsonObjectRequest
+                (Request.Method.POST, ServerHelper.HEY_URL, heyJson, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonResponse) {
+                        boolean successful;
+                        HeyResponseMessage response = new HeyResponseMessage(jsonResponse);
+
+                        try {
+                            successful = response.wasSuccessful();
+                        } catch(JSONException e) {
+                            e.printStackTrace();
+                            successful = false;
+                        }
+
+                        listener.onResponse(successful);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onErrorResponse(volleyError);
+                    }
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+
+        // add to queue
+        mQueue.add(heyRequest);
+    }
+
+    public void talk(User userToTalk, final OnTalkListener listener) {
+        
     }
 
 // INTERFACES
@@ -187,6 +266,11 @@ public class ServerComm {
     }
 
     public interface OnHeyListener {
+        public void onResponse(boolean successful);
+        public void onErrorResponse(VolleyError error);
+    }
+
+    public interface OnTalkListener {
         public void onResponse(boolean successful);
         public void onErrorResponse(VolleyError error);
     }
