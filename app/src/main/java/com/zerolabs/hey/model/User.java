@@ -3,6 +3,7 @@ package com.zerolabs.hey.model;
 import com.facebook.model.GraphUser;
 import com.zerolabs.hey.helpers.FormatHelper;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
@@ -11,6 +12,11 @@ import java.util.GregorianCalendar;
 
 /**
  * Created by jpedro on 11.10.14.
+ *
+ * Representation of an User.
+ *
+ * ATTENTION! Getters may return NULL or EMPTY Strings, it is the client's responsibility to check.
+ *
  */
 public class User {
 
@@ -152,10 +158,6 @@ public class User {
 
 // REPRESENTATION HELPER METHODS
 
-    public JSONObject toJson() {
-        return null;
-    }
-
     public static User fromGraphUser(GraphUser graphUser) {
         User resultUser = new User();
 
@@ -163,8 +165,83 @@ public class User {
         resultUser.setBirthdate(FormatHelper.getDateFromString(graphUser.getBirthday()));
         resultUser.setUsername(graphUser.getName());
         resultUser.setCity(graphUser.getLocation().getName());
+        resultUser.setGender(graphUser.getProperty("gender").equals("male"));
 
         return resultUser;
+    }
+
+    public JSONObject toJson() throws JSONException {
+        JSONObject userJson = new JSONObject();
+
+        userJson.put(JSONRep.KEY_ACCESS_TOKEN, getAccessToken());
+
+        JSONObject birthdateJson = new JSONObject();
+        GregorianCalendar birthdateCal = (GregorianCalendar)Calendar.getInstance();
+        birthdateCal.setTime(getBirthdate());
+        birthdateJson.put(JSONRep.KEY_YEAR, birthdateCal.get(Calendar.YEAR));
+        birthdateJson.put(JSONRep.KEY_MONTH, birthdateCal.get(Calendar.MONTH));
+        birthdateJson.put(JSONRep.KEY_DAY, birthdateCal.get(Calendar.DAY_OF_MONTH));
+
+        userJson.put(JSONRep.KEY_BIRTHDATE, birthdateJson);
+        userJson.put(JSONRep.KEY_USERID, getUserId());
+        userJson.put(JSONRep.KEY_CITY, getCity());
+        userJson.put(JSONRep.KEY_GCMID, getGCMId());
+        userJson.put(JSONRep.KEY_GENDER, isMale() ? JSONRep.VALUE_MALE : JSONRep.VALUE_MALE);
+        userJson.put(JSONRep.KEY_LIKES_FEMALE, likesFemale());
+        userJson.put(JSONRep.KEY_LIKES_MALE, likesMale());
+        userJson.put(JSONRep.KEY_MAC_ADDRESS, getMacAddress());
+        userJson.put(JSONRep.KEY_MAX_AGE, getMaxAge());
+        userJson.put(JSONRep.KEY_MIN_AGE, getMinAge());
+        userJson.put(JSONRep.KEY_USERNAME, getUsername());
+
+        return userJson;
+    }
+
+    public static User fromJson(JSONObject userJson) {
+        User resultUser = new User();
+
+        resultUser.setCity(userJson.optString(JSONRep.KEY_CITY));
+        resultUser.setAccessToken(userJson.optString(JSONRep.KEY_ACCESS_TOKEN));
+        resultUser.setBirthdate(FormatHelper.getDateFromString(userJson.optString(JSONRep.KEY_BIRTHDATE)));
+        resultUser.setGender(userJson.optBoolean(JSONRep.KEY_GENDER, true));
+        resultUser.setLikesFemale(userJson.optBoolean(JSONRep.KEY_LIKES_FEMALE, true));
+        resultUser.setLikesMale(userJson.optBoolean(JSONRep.KEY_LIKES_MALE, true));
+        resultUser.setMacAddress(userJson.optString(JSONRep.KEY_MAC_ADDRESS));
+        resultUser.setMaxAge(userJson.optInt(JSONRep.KEY_MAX_AGE, JSONRep.DEFAULT_MAX_AGE));
+        resultUser.setMinAge(userJson.optInt(JSONRep.KEY_MIN_AGE, JSONRep.DEFAULT_MIN_AGE));
+        resultUser.setUsername(userJson.optString(JSONRep.KEY_USERNAME));
+        resultUser.setUserId(userJson.optString(JSONRep.KEY_USERID));
+        resultUser.setGCMId(userJson.optString(JSONRep.KEY_GCMID));
+
+        return resultUser;
+    }
+
+// REPRESENTATION HELPER CLASSES
+
+    public static class JSONRep {
+        public static String KEY_USERID         = "userid";
+        public static String KEY_GCMID          = "gcm_id";
+        public static String KEY_USERNAME       = "username";
+        public static String KEY_ACCESS_TOKEN   = "access_token";
+        public static String KEY_MAC_ADDRESS    = "mac_address";
+        public static String KEY_CITY           = "city";
+
+        public static String KEY_BIRTHDATE      = "birthdate";
+        public static String KEY_YEAR           = "year";
+        public static String KEY_MONTH          = "month";
+        public static String KEY_DAY            = "day";
+
+        public static String KEY_MIN_AGE        = "min_age";
+        public static String KEY_MAX_AGE        = "max_age";
+        public static int DEFAULT_MAX_AGE       = 120;
+        public static int DEFAULT_MIN_AGE       = 0;
+
+        public static String KEY_GENDER         = "gender";
+        public static String VALUE_MALE         = "male";
+        public static String VALUE_FEMALE       = "female";
+
+        public static String KEY_LIKES_MALE     = "likes_male";
+        public static String KEY_LIKES_FEMALE   = "likes_female";
     }
 
 }

@@ -15,6 +15,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
+import com.zerolabs.hey.comm.RequestManager;
 
 import java.util.Arrays;
 
@@ -26,6 +27,9 @@ public class LoginActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        RequestManager.init(this);  // TODO: IS THIS THE RIGHT PLACE TO INITIALIZE THE REQUESTMANAGER ?
+
         setContentView(R.layout.activity_login);
         if (savedInstanceState == null) {
             mLoginFragment = new LoginFragment();
@@ -76,7 +80,7 @@ public class LoginActivity extends FragmentActivity {
 
             LoginButton authButton = (LoginButton) rootView.findViewById(R.id.authButton);
             authButton.setFragment(this);
-            authButton.setReadPermissions(Arrays.asList("public_profile"));
+            authButton.setReadPermissions(Arrays.asList("public_profile", "user_birthday", "user_location"));
 
             return rootView;
         }

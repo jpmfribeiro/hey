@@ -13,6 +13,7 @@ import com.facebook.FacebookRequestError;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.ProfilePictureView;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
 
@@ -43,16 +44,20 @@ public class ProfileActivity extends Activity {
         mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
         mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
         mGenderTextView = (TextView)findViewById(R.id.profile_gender_textview);
-        mServerComm = new ServerComm();
-        mFacebookSession = Session.openActiveSession(this, true, mCallback);
+        mProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+        mProfilePictureView.setCropped(true);
+        mServerComm = new ServerComm(this);
+        mFacebookSession = Session.getActiveSession();
 
         if(mFacebookSession != null) {
             Log.d(LOG_TAG, "Session is: " + mFacebookSession.toString() + " with access token " + mFacebookSession.getAccessToken());
-            mServerComm.getFacebookData(null, new ServerComm.OnGetFacebookDataListener() {
+            mServerComm.getFacebookData(mFacebookSession, new ServerComm.OnGetFacebookDataListener() {
                 @Override
                 public void onResponse(User user) {
-                    mUserNameTextView.setText(user.getUsername());
+                    mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
                     mLocationTextView.setText(user.getCity());
+                    mGenderTextView.setText(user.isMale() ? "man" : "woman");
+                    mProfilePictureView.setProfileId(user.getUserId());
                 }
 
                 @Override
@@ -90,6 +95,7 @@ public class ProfileActivity extends Activity {
     TextView mLocationTextView;
     TextView mGenderTextView;
     Session mFacebookSession;
+    private ProfilePictureView mProfilePictureView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
