@@ -2,12 +2,15 @@ package com.zerolabs.hey;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.android.volley.VolleyError;
 import com.zerolabs.hey.DiscoveryHelper.WLANP2PDiscovery;
+import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
 
 import java.util.HashMap;
@@ -22,6 +25,7 @@ public class MainListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         wlanp2PDiscovery = new WLANP2PDiscovery(getActivity());
+        mServerComm = new ServerComm(getActivity());
         wlanp2PDiscovery.initialize();
     }
 
@@ -31,6 +35,7 @@ public class MainListFragment extends Fragment {
     ViewGroup listRootView;
     Button button;
     WLANP2PDiscovery wlanp2PDiscovery;
+    ServerComm mServerComm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +49,18 @@ public class MainListFragment extends Fragment {
                 wlanp2PDiscovery.discoverMACAdresses(new WLANP2PDiscovery.MACListener() {
                     @Override
                     public void MACReturn(List<String> MACList) {
+                        mServerComm.getUsersFromMacAddresses(MACList, new ServerComm.OnGetUsersListener() {
+                            @Override
+                            public void onResponse(boolean successful, List<User> retrievedUsers) {
+                                Log.v(getClass().toString(), retrievedUsers.toString());
+                                setNearUsers(retrievedUsers);
+                            }
 
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d(getClass().toString(), error.toString());
+                            }
+                        });
                     }
                 });
             }
