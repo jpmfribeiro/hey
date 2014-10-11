@@ -20,7 +20,7 @@
             android:showDividers="middle"
             android:divider="@drawable/round_style_divider"
             android:background="@drawable/round_style_edittextnf"
-            android:id="@+id/linearLayout">
+            android:id="@+id/listContainer">
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
