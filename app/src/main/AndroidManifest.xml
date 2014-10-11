@@ -58,7 +58,6 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-<<<<<<< HEAD
 
         <activity
             android:name=".MeetActivity"
@@ -66,7 +65,6 @@
             android:label="@string/title_activity_meet" >
 
         </activity>
-=======
         <receiver
             android:name=".comm.gcm.GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
@@ -77,7 +75,6 @@
         </receiver>
         <service android:name=".comm.gcm.GCMIntentService" />
 
->>>>>>> 9a9fa55f84d7e91da6ce513396f37388f998541e
     </application>
 
 </manifest>

@@ -21,6 +21,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.ProfilePictureView;
 import com.zerolabs.hey.UIHelper.RangeSeekBar;
 import com.zerolabs.hey.comm.ServerComm;
+import com.zerolabs.hey.model.Settings;
 import com.zerolabs.hey.model.User;
 
 
@@ -66,6 +67,13 @@ public class ProfileActivity extends Activity {
             }
         });
 
+        mUser = Settings.getUser(context);
+        mAgeRangeSeekBar.setSelectedMinValue(mUser.getMinAge());
+        mAgeRangeSeekBar.setSelectedMaxValue(mUser.getMaxAge());
+        mWomenCheckBox.setChecked(mUser.likesFemale());
+        mMenCheckBox.setChecked(mUser.likesMale());
+
+
         mAgeRangeSeekBar.setNotifyWhileDragging(true);
 
         mProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
@@ -84,11 +92,6 @@ public class ProfileActivity extends Activity {
                     //mLocationTextView.setText(user.getCity());
                     mGenderTextView.setText(user.isMale() ? "man" : "woman");
                     mProfilePictureView.setProfileId(user.getUserId());
-                    mAgeRangeSeekBar.setSelectedMinValue(user.getMinAge());
-                    mAgeRangeSeekBar.setSelectedMaxValue(user.getMaxAge());
-                    mWomenCheckBox.setChecked(user.likesFemale());
-                    mMenCheckBox.setChecked(user.likesMale());
-                    mUser = user;
                 }
 
                 @Override

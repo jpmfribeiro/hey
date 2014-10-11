@@ -1,6 +1,7 @@
 package com.zerolabs.hey;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class MainListFragment extends Fragment {
 
     ViewGroup listRootView;
     Button button;
+    Button profilButton;
     WLANP2PDiscovery wlanp2PDiscovery;
     ServerComm mServerComm;
 
@@ -99,8 +101,21 @@ public class MainListFragment extends Fragment {
                 */
             }
         });
+
+        profilButton = (Button)rootView.findViewById(R.id.button2);
+        profilButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+
         return rootView;
     }
+
 
 
     HashMap <String, View> viewHashMap = new HashMap<String, View>();
@@ -109,7 +124,7 @@ public class MainListFragment extends Fragment {
     List<User> currentUsers = new LinkedList<User>();
 
     void setNearUsers(List<User> users){
-        List<User> oldUsers = users;
+        List<User> oldUsers = currentUsers;
         List<User> newUsers = users;
         //TODO: n*log(n)
         //add new Users to view
@@ -131,7 +146,20 @@ public class MainListFragment extends Fragment {
                         if(!isActivated){
                             view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
                             viewIsActivatedHashMap.put(view, true);
-                            //TODO user wants to hey the other user
+                            mServerComm.sendHey(viewUserHashMap.get(view), new ServerComm.OnHeyListener() {
+                                @Override
+                                public void onResponse(boolean successful) {
+                                    if(successful)
+                                        Log.v(getClass().toString(), "Hey successful");
+                                    else
+                                        Log.v(getClass().toString(), "Hey unsuccessful");
+                                }
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.v(getClass().toString(), "Hey unsuccessful: "+error.toString());
+                                }
+                            });
                         }
                         else{
                             //view.animate().alpha(0).setDuration(1000).start();
@@ -174,6 +202,7 @@ public class MainListFragment extends Fragment {
                 viewIsActivatedHashMap.remove(currentView);
             }
         }
+        currentUsers = users;
     }
 
 
