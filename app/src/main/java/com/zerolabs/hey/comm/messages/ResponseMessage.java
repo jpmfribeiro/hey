@@ -27,7 +27,7 @@ public abstract class ResponseMessage {
     // GETTERS
 
     public boolean wasSuccessful() throws JSONException {
-        return mJsonResponse.getBoolean(KEY_SUCCESSFUL);
+        return mJsonResponse.getInt(KEY_SUCCESSFUL) == 1;
     }
 
 }
