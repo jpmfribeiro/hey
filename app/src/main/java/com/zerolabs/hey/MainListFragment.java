@@ -108,7 +108,6 @@ public class MainListFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 startActivity(intent);
-                getActivity().finish();
             }
         });
 

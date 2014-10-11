@@ -2,7 +2,6 @@ package com.zerolabs.hey;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -88,8 +87,8 @@ public class ProfileActivity extends Activity {
             mServerComm.getFacebookData(mFacebookSession, new ServerComm.OnGetFacebookDataListener() {
                 @Override
                 public void onResponse(User user) {
-                    //mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
-                    //mLocationTextView.setText(user.getCity());
+                    mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
+                    mLocationTextView.setText(user.getCity());
                     mGenderTextView.setText(user.isMale() ? "man" : "woman");
                     mProfilePictureView.setProfileId(user.getUserId());
                 }
@@ -127,8 +126,8 @@ public class ProfileActivity extends Activity {
             @Override
             public void onResponse(boolean successful) {
                 if(successful) {
-                    Intent intent = new Intent(context, MainActivity.class);
-                    startActivity(intent);
+                    // Intent intent = new Intent(context, MainActivity.class);
+                    // startActivity(intent);
                     Toast.makeText(context, "saved settings", Toast.LENGTH_LONG).show();
                     finish();
                 }
