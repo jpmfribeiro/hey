@@ -15,6 +15,8 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.zerolabs.hey.comm.messages.HeyRequestMessage;
 import com.zerolabs.hey.comm.messages.HeyResponseMessage;
+import com.zerolabs.hey.comm.messages.TalkRequestMessage;
+import com.zerolabs.hey.comm.messages.TalkResponseMessage;
 import com.zerolabs.hey.comm.messages.UsersFromMacRequestMessage;
 import com.zerolabs.hey.comm.messages.RegisterRequestMessage;
 import com.zerolabs.hey.comm.messages.RegisterResponseMessage;
@@ -100,6 +102,7 @@ public class ServerComm {
                 (Request.Method.POST, ServerHelper.REGISTER_URL, registerJson, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonResponse) {
+                        Log.d(LOG_TAG, "Response: " + jsonResponse.toString());
                         boolean successful;
                         try {
                             RegisterResponseMessage response = new RegisterResponseMessage(jsonResponse);
@@ -218,6 +221,7 @@ public class ServerComm {
                 (Request.Method.POST, ServerHelper.HEY_URL, heyJson, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonResponse) {
+                        Log.d(LOG_TAG, "Response: " + jsonResponse.toString());
                         boolean successful;
                         HeyResponseMessage response = new HeyResponseMessage(jsonResponse);
 
@@ -247,7 +251,57 @@ public class ServerComm {
         mQueue.add(heyRequest);
     }
 
-    public void talk(User userToTalk, String talk, final OnTalkListener listener) {
+    public void talk(User userToTalk, String talkContent, final OnTalkListener listener) {
+
+        String userid = Settings.getUserid(mContext);
+
+        if(TextUtils.isEmpty(userid)) {
+            Log.e(LOG_TAG, "sendHey > Userid returned empty!");
+            return;
+        }
+
+        TalkRequestMessage message = new TalkRequestMessage(userid, userToTalk.getUserId(), talkContent);
+        JSONObject talkJson;
+        try {
+            talkJson = message.toJson();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Make Volley JSONObjectRequest
+        JsonObjectRequest talkRequest = new JsonObjectRequest
+                (Request.Method.POST, ServerHelper.TALK_URL, talkJson, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonResponse) {
+                        Log.d(LOG_TAG, "Response: " + jsonResponse.toString());
+                        boolean successful;
+                        TalkResponseMessage response = new TalkResponseMessage(jsonResponse);
+
+                        try {
+                            successful = response.wasSuccessful();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            successful = false;
+                        }
+
+                        listener.onResponse(successful);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onErrorResponse(volleyError);
+                    }
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+
+        // add to queue
+        mQueue.add(talkRequest);
 
     }
 

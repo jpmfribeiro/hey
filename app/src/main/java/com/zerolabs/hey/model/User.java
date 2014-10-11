@@ -194,7 +194,7 @@ public class User {
         GregorianCalendar birthdateCal = (GregorianCalendar)Calendar.getInstance();
         birthdateCal.setTime(getBirthdate());
         birthdateJson.put(JSONRep.KEY_YEAR, birthdateCal.get(Calendar.YEAR));
-        birthdateJson.put(JSONRep.KEY_MONTH, birthdateCal.get(Calendar.MONTH));
+        birthdateJson.put(JSONRep.KEY_MONTH, birthdateCal.get(Calendar.MONTH) + 1);
         birthdateJson.put(JSONRep.KEY_DAY, birthdateCal.get(Calendar.DAY_OF_MONTH));
 
         userJson.put(JSONRep.KEY_BIRTHDATE, birthdateJson);

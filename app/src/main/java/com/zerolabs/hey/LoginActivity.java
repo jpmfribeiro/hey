@@ -20,6 +20,8 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.zerolabs.hey.comm.RequestManager;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
@@ -29,6 +31,15 @@ import java.util.Arrays;
 
 public class LoginActivity extends FragmentActivity {
 
+    public static final String EXTRA_MESSAGE = "message";
+    public static final String PROPERTY_REG_ID = "registration_id";
+    private static final String PROPERTY_APP_VERSION = "appVersion";
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static String LOG_TAG = LoginActivity.class.getSimpleName();
+
+    String SENDER_ID = "Your-Sender-ID";
+
     private LoginFragment mLoginFragment;
 
     @Override
@@ -37,15 +48,51 @@ public class LoginActivity extends FragmentActivity {
 
         RequestManager.init(this);  // TODO: IS THIS THE RIGHT PLACE TO INITIALIZE THE REQUESTMANAGER ?
 
-        setContentView(R.layout.activity_login);
-        if (savedInstanceState == null) {
-            mLoginFragment = new LoginFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.login_container, mLoginFragment)
-                    .commit();
+        // Check device for Play Services APK.
+        if (checkPlayServices()) {
+            // If this check succeeds, proceed with normal processing.
+            // Otherwise, prompt user to get valid Play Services APK.
+
+
+            setContentView(R.layout.activity_login);
+            if (savedInstanceState == null) {
+                mLoginFragment = new LoginFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.login_container, mLoginFragment)
+                        .commit();
+            } else {
+                mLoginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.login_container);
+            }
         } else {
-            mLoginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.login_container);
+
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkPlayServices();
+    }
+
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(LOG_TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
 
