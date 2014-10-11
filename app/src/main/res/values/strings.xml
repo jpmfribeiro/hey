@@ -15,4 +15,16 @@
     <string name="years"> years</string>
     <string name="done">done</string>
 
+    <!-- PREFERENCES -->
+    <string name="pref_username" translatable="false">username</string>
+    <string name="pref_accesstoken" translatable="false">token</string>
+    <string name="pref_city" translatable="false">city</string>
+    <string name="pref_ismale" translatable="false">is_male</string>
+    <string name="pref_maxage" translatable="false">max_age</string>
+    <string name="pref_minage" translatable="false">min_age</string>
+    <string name="pref_macaddress" translatable="false">mac_address</string>
+    <string name="pref_age" translatable="false">age</string>
+    <string name="pref_likesmale" translatable="false">likes_male</string>
+    <string name="pref_likesfemale" translatable="false">likes_female</string>
+
 </resources>

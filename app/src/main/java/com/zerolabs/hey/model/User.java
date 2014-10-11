@@ -11,6 +11,8 @@ public class User {
     private String mAccessToken;
     private String mMacAddress;
 
+    private String mCity;
+
     private int mAge;
     private int mMinAge;
     private int mMaxAge;
@@ -59,6 +61,8 @@ public class User {
         mLikesFemale = likesFemale;
     }
 
+    public void setCity(String city) { mCity = city; }
+
     // GETTERS
 
 
@@ -97,4 +101,6 @@ public class User {
     public boolean likesFemale() {
         return mLikesFemale;
     }
+
+    public String getCity() { return mCity; }
 }
