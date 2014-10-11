@@ -7,5 +7,12 @@
     <string name="facebook_login">login with</string>
     <string name="facebook_app_id">596219200500489</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="interested_in">interested in</string>
+    <string name="women">women</string>
+    <string name="men">men</string>
+    <string name="age">age </string>
+    <string name="years"> years</string>
+    <string name="done">done</string>
 
 </resources>
