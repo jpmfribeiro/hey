@@ -1,21 +1,35 @@
 package com.zerolabs.hey;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
 
-public class LoginActivity extends Activity {
+
+public class LoginActivity extends FragmentActivity {
+
+    private LoginFragment mLoginFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.login_container, new LoginFragment())
+            mLoginFragment = new LoginFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.login_container, mLoginFragment)
                     .commit();
+        } else {
+            mLoginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.login_container);
         }
     }
 
@@ -39,4 +53,89 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class LoginFragment extends Fragment {
+
+        private static final String LOG_TAG = LoginFragment.class.getSimpleName();
+
+        private UiLifecycleHelper mUiHelper;
+
+        public LoginFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+            LoginButton authButton = (LoginButton) rootView.findViewById(R.id.authButton);
+            authButton.setFragment(this);
+
+            return rootView;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            mUiHelper = new UiLifecycleHelper(getActivity(), mCallback);
+            mUiHelper.onCreate(savedInstanceState);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+
+            // For scenarios where the main activity is launched and user
+            // session is not null, the session state change notification
+            // may not be triggered. Trigger it if it's open/closed.
+            Session session = Session.getActiveSession();
+            if (session != null &&
+                    (session.isOpened() || session.isClosed()) ) {
+                onSessionStateChange(session, session.getState(), null);
+            }
+
+            mUiHelper.onResume();
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            mUiHelper.onActivityResult(requestCode, resultCode, data);
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            mUiHelper.onPause();
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            mUiHelper.onDestroy();
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            mUiHelper.onSaveInstanceState(outState);
+        }
+
+        private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+            if (state.isOpened()) {
+                Log.i(LOG_TAG, "Logged in with session" + session.getAccessToken() + "...");
+            } else if (state.isClosed()) {
+                Log.i(LOG_TAG, "Logged out...");
+            }
+        }
+
+        private Session.StatusCallback mCallback = new Session.StatusCallback() {
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+                onSessionStateChange(session, state, exception);
+            }
+        };
+    }
 }
