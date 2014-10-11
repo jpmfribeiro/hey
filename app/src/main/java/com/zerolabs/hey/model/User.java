@@ -1,11 +1,23 @@
 package com.zerolabs.hey.model;
 
+import com.facebook.model.GraphUser;
+import com.zerolabs.hey.helpers.FormatHelper;
+
+import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * Created by jpedro on 11.10.14.
  */
 public class User {
 
-    // ATTRIBUTES
+// ATTRIBUTES
+
+    private String mUserId; // FacebookID
+    private String mGCMId;  // TODO: THE GCM_ID IS NOT SAVED AS A PREFERENCE FOR NOW. SHOULD IT BE?
 
     private String mUsername;
     private String mAccessToken;
@@ -13,7 +25,7 @@ public class User {
 
     private String mCity;
 
-    private int mAge;
+    private Date mBirthdate;
     private int mMinAge;
     private int mMaxAge;
 
@@ -23,7 +35,11 @@ public class User {
 
     public User() { }
 
-    // SETTERS
+// SETTERS
+
+    public void setUserId(String userid) {
+        mUserId = userid;
+    }
 
     public void setUsername(String username) {
         mUsername = username;
@@ -37,8 +53,8 @@ public class User {
         mMacAddress = macAddress;
     }
 
-    public void setAge(int age) {
-        mAge = age;
+    public void setBirthdate(Date birthdate) {
+        mBirthdate = birthdate;
     }
 
     public void setMinAge(int minAge) {
@@ -63,7 +79,10 @@ public class User {
 
     public void setCity(String city) { mCity = city; }
 
-    // GETTERS
+    public void setGCMId(String gcmId) { mGCMId = gcmId; }
+
+
+// GETTERS
 
 
     public String getUsername() {
@@ -78,8 +97,8 @@ public class User {
         return mMacAddress;
     }
 
-    public int getAge() {
-        return mAge;
+    public Date getBirthdate() {
+        return mBirthdate;
     }
 
     public int getMinAge() {
@@ -103,4 +122,49 @@ public class User {
     }
 
     public String getCity() { return mCity; }
+
+    public String getUserId() { return mUserId; }
+
+    public String getGCMId() { return mGCMId; }
+
+    public int getAge() {
+        GregorianCalendar birthCal = new GregorianCalendar();
+        birthCal.setTime(mBirthdate);
+
+        GregorianCalendar cal = new GregorianCalendar();
+        int y, m, d, a;
+
+        y = cal.get(Calendar.YEAR);
+        m = cal.get(Calendar.MONTH);
+        d = cal.get(Calendar.DAY_OF_MONTH);
+
+        a = y - birthCal.get(Calendar.YEAR);
+        if ((m < birthCal.get(Calendar.MONTH))
+                || ((m == birthCal.get(Calendar.MONTH)) && (d < birthCal.get(Calendar.DAY_OF_MONTH)))) {
+            --a;
+        }
+        if(a < 0)
+            throw new IllegalArgumentException("Age < 0");
+
+        return a;
+    }
+
+
+// REPRESENTATION HELPER METHODS
+
+    public JSONObject toJson() {
+        return null;
+    }
+
+    public static User fromGraphUser(GraphUser graphUser) {
+        User resultUser = new User();
+
+        resultUser.setUserId(graphUser.getId());
+        resultUser.setBirthdate(FormatHelper.getDateFromString(graphUser.getBirthday()));
+        resultUser.setUsername(graphUser.getName());
+        resultUser.setCity(graphUser.getLocation().getName());
+
+        return resultUser;
+    }
+
 }

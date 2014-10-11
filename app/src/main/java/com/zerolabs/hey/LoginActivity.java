@@ -58,7 +58,7 @@ public class LoginActivity extends FragmentActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * LoginFragment handles the facebook login process.
      */
     public static class LoginFragment extends Fragment {
 

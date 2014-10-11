@@ -22,4 +22,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':facebook')
+    compile files('/home/jpedro/android/projects/HeyApp/libs/volley.jar')
 }
