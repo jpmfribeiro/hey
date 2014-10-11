@@ -82,7 +82,7 @@ public class ServerComm {
 
 // SERVER REQUESTS
 
-    public void registerUser(User user, final OnRegisterUserListener listener) {
+    public void registerUser(final User user, final OnRegisterUserListener listener) {
         // Create JSON from user
         RegisterRequestMessage message = new RegisterRequestMessage(user);
         JSONObject registerJson;
@@ -94,8 +94,6 @@ public class ServerComm {
             return;
         }
 
-        // Store user data locally
-        Settings.storeUserData(mContext, user);
 
         // Make Volley JSONObjectRequest
         JsonObjectRequest registerRequest = new JsonObjectRequest
@@ -109,6 +107,11 @@ public class ServerComm {
                         } catch(JSONException e) {
                             e.printStackTrace();
                             successful = false;
+                        }
+
+                        if(successful) {
+                            // Store user data locally
+                            Settings.storeUserData(mContext, user);
                         }
 
                         listener.onResponse(successful);
