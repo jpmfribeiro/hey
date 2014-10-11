@@ -21,18 +21,16 @@ public class WLANP2PDiscovery {
 
     public WLANP2PDiscovery(Context context){
         mWifiP2pManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mWifiP2pManager.initialize(context, context.getMainLooper(), null);
         mContext = context;
     }
 
 
     public void initialize(){
-        mWifiP2pManager.initialize(mContext, mContext.getMainLooper(), new WifiP2pManager.ChannelListener() {
-            @Override
-            public void onChannelDisconnected() {
-                //TODO
-            }
-        });
+        mChannel = mWifiP2pManager.initialize(mContext, mContext.getMainLooper(), null);
+    }
+
+    public void terminate(){
+        mWifiP2pManager.cancelConnect(mChannel, null);
     }
 
 
