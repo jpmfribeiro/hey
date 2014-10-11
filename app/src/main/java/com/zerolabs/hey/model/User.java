@@ -140,6 +140,7 @@ public class User {
 
     public int getAge() {
         GregorianCalendar birthCal = new GregorianCalendar();
+        if(mBirthdate==null)return -1;
         birthCal.setTime(mBirthdate);
 
         GregorianCalendar cal = new GregorianCalendar();

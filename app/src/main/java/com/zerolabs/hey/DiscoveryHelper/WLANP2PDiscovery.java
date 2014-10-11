@@ -62,7 +62,7 @@ public class WLANP2PDiscovery {
             List<String> returnMACList = new LinkedList<String>();
             Log.v("MAC Address: ", "got Response");
             for(WifiP2pDevice wifiP2pDevice: wifiP2pDeviceCollection){
-                returnMACList.add(wifiP2pDevice.deviceAddress);
+                returnMACList.add(wifiP2pDevice.deviceAddress.substring(2));
                 Log.v("MAC Address: ", wifiP2pDevice.deviceAddress);
             }
             cMacListener.MACReturn(returnMACList);

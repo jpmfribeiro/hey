@@ -329,13 +329,14 @@ public class LoginActivity extends FragmentActivity {
                 mServerComm.getFacebookData(session, new ServerComm.OnGetFacebookDataListener() {
                     @Override
                     public void onResponse(User user) {
-                        user.setMacAddress(wifiManager.getConnectionInfo().getMacAddress());
+                        String macAddress = wifiManager.getConnectionInfo().getMacAddress();
+                        user.setMacAddress(macAddress.substring(2));
                         user.setGCMId(regid);
                         Log.d(LOG_TAG, "GCMId: " + regid);
                         mServerComm.registerUser(user, new ServerComm.OnRegisterUserListener() {
                             @Override
                             public void onResponse(boolean successful) {
-                                if(successful) {
+                                if (successful) {
                                     Intent intent = new Intent(getActivity(), MainActivity.class);
                                     Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
                                     startActivity(intent);
