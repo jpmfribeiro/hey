@@ -19,7 +19,8 @@
             android:animateLayoutChanges="true"
             android:showDividers="middle"
             android:divider="@drawable/round_style_divider"
-            android:background="@drawable/round_style_edittextnf">
+            android:background="@drawable/round_style_edittextnf"
+            android:id="@+id/linearLayout">
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -32,6 +33,14 @@
                 android:text="test"/>
             </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
 
 </RelativeLayout>
