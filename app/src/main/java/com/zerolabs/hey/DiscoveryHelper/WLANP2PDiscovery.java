@@ -26,7 +26,7 @@ public class WLANP2PDiscovery {
     }
 
 
-    public void Initialize(){
+    public void initialize(){
         mWifiP2pManager.initialize(mContext, mContext.getMainLooper(), new WifiP2pManager.ChannelListener() {
             @Override
             public void onChannelDisconnected() {

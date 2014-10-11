@@ -26,6 +26,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:text="Ron"
+                android:id="@+id/profile_username_textview"
                 android:textSize="@dimen/profile_text_size"
                 android:gravity="center_vertical"
                 android:layout_weight="1"/>

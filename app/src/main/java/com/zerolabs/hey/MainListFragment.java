@@ -19,7 +19,7 @@ public class MainListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         wlanp2PDiscovery = new WLANP2PDiscovery(getActivity());
-        wlanp2PDiscovery.Initialize();
+        wlanp2PDiscovery.initialize();
     }
 
     public MainListFragment() {
