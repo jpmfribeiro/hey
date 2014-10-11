@@ -96,6 +96,7 @@ public class ServerComm {
             return;
         }
 
+        Log.d(LOG_TAG, "Request: " + registerJson.toString());
 
         // Make Volley JSONObjectRequest
         JsonObjectRequest registerRequest = new JsonObjectRequest

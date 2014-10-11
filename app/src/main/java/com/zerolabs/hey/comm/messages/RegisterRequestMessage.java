@@ -20,6 +20,6 @@ public class RegisterRequestMessage implements RequestMessage {
 
     @Override
     public JSONObject toJson() throws JSONException {
-        return mUser.toJson().put(User.JSONRep.KEY_GCMID, "seus putos");
+        return mUser.toJson();
     }
 }

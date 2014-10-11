@@ -28,4 +28,6 @@
     <string name="pref_likesmale" translatable="false">likes_male</string>
     <string name="pref_likesfemale" translatable="false">likes_female</string>
 
+    <string name="google_cloud_msg" templateMergeStrategy="preserve">AIzaSyB7BtIaBjNxUL3l4cEcSk8_xLqgfPmuEwk</string>
+
 </resources>
