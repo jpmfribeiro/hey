@@ -3,6 +3,7 @@ package com.zerolabs.hey;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ public class ProfileActivity extends Activity {
         context = this;
         setContentView(R.layout.activity_profile);
         mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
+        mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
+        mGenderTextView = (TextView)findViewById(R.id.profile_gender_textview);
         mServerComm = new ServerComm();
         mFacebookSession = Session.getActiveSession();
         if(mFacebookSession!=null) {
@@ -31,11 +34,13 @@ public class ProfileActivity extends Activity {
                 @Override
                 public void onResponse(User user) {
                     mUserNameTextView.setText(user.getUsername());
+                    mLocationTextView.setText(user.getCity());
                 }
 
                 @Override
                 public void onErrorResponse(FacebookRequestError error) {
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                    Log.d(getClass().toString(), error.toString());
                 }
             });
         }
@@ -43,6 +48,8 @@ public class ProfileActivity extends Activity {
 
     ServerComm mServerComm;
     TextView mUserNameTextView;
+    TextView mLocationTextView;
+    TextView mGenderTextView;
     Session mFacebookSession;
 
     @Override
