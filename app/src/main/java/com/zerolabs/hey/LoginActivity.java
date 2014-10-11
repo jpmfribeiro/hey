@@ -335,14 +335,19 @@ public class LoginActivity extends FragmentActivity {
                         mServerComm.registerUser(user, new ServerComm.OnRegisterUserListener() {
                             @Override
                             public void onResponse(boolean successful) {
-                                if(successful){
-
+                                if(successful) {
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
+                                    startActivity(intent);
                                 }
+<<<<<<< HEAD
 
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
                                 startActivity(intent);
                                 finish();
+=======
+>>>>>>> 1cabb15d5e2ab952af951fcadc96d2fc00b17113
                             }
 
                             @Override

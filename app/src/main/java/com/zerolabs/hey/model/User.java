@@ -28,7 +28,7 @@ public class User {
 // ATTRIBUTES
 
     private String mUserId; // FacebookID
-    private String mGCMId;  // TODO: THE GCM_ID IS NOT SAVED AS A PREFERENCE FOR NOW. SHOULD IT BE?
+    private String mGCMId;
 
     private String mUsername;
     private String mAccessToken;

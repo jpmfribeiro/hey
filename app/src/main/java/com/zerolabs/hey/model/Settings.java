@@ -17,6 +17,7 @@ public class Settings {
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString(context.getString(R.string.pref_username), user.getUsername());
+        editor.putString(context.getString(R.string.pref_gcmid), user.getGCMId());
         editor.putString(context.getString(R.string.pref_accesstoken), user.getAccessToken());
         editor.putString(context.getString(R.string.pref_macaddress), user.getMacAddress());
         editor.putString(context.getString(R.string.pref_birthdate), FormatHelper.formatDateToString(user.getBirthdate()));
@@ -51,6 +52,7 @@ public class Settings {
         User user = new User();
 
         user.setAccessToken(settings.getString(context.getString(R.string.pref_accesstoken), ""));
+        user.setGCMId(settings.getString(context.getString(R.string.pref_gcmid), ""));
         user.setBirthdate(FormatHelper.getDateFromString(settings.getString(context.getString(R.string.pref_birthdate), "")));
         user.setGender(settings.getBoolean(context.getString(R.string.pref_ismale), true));
         user.setLikesFemale(settings.getBoolean(context.getString(R.string.pref_likesfemale), true));
