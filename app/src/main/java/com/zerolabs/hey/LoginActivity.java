@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -125,7 +127,7 @@ public class LoginActivity extends FragmentActivity {
 
         private void onSessionStateChange(Session session, SessionState state, Exception exception) {
             if (state.isOpened()) {
-                Log.i(LOG_TAG, "Logged in with session" + session.getAccessToken() + "...");
+                Log.i(LOG_TAG, "Logged in...");
             } else if (state.isClosed()) {
                 Log.i(LOG_TAG, "Logged out...");
             }
