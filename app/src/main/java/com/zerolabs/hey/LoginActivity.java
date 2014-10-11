@@ -339,15 +339,8 @@ public class LoginActivity extends FragmentActivity {
                                     Intent intent = new Intent(getActivity(), MainActivity.class);
                                     Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
                                     startActivity(intent);
+                                    finish();
                                 }
-<<<<<<< HEAD
-
-                                Intent intent = new Intent(getActivity(), MainActivity.class);
-                                Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
-                                startActivity(intent);
-                                finish();
-=======
->>>>>>> 1cabb15d5e2ab952af951fcadc96d2fc00b17113
                             }
 
                             @Override
