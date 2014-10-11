@@ -244,8 +244,8 @@ public class ServerComm {
         mQueue.add(heyRequest);
     }
 
-    public void talk(User userToTalk, final OnTalkListener listener) {
-        
+    public void talk(User userToTalk, String talk, final OnTalkListener listener) {
+
     }
 
 // INTERFACES
