@@ -55,7 +55,7 @@ public class ProfileActivity extends Activity {
                 @Override
                 public void onResponse(User user) {
                     mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
-                    mLocationTextView.setText(user.getCity());
+                    //mLocationTextView.setText(user.getCity());
                     mGenderTextView.setText(user.isMale() ? "man" : "woman");
                     mProfilePictureView.setProfileId(user.getUserId());
                 }

@@ -2,13 +2,11 @@ package com.zerolabs.hey;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.android.volley.VolleyError;
 import com.zerolabs.hey.DiscoveryHelper.WLANP2PDiscovery;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
@@ -46,6 +44,7 @@ public class MainListFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 wlanp2PDiscovery.discoverMACAdresses(new WLANP2PDiscovery.MACListener() {
                     @Override
                     public void MACReturn(List<String> MACList) {
@@ -63,6 +62,12 @@ public class MainListFragment extends Fragment {
                         });
                     }
                 });
+                */
+
+
+                View newView = LayoutInflater.from(getActivity()).inflate(R.layout.main_list_item, listRootView, false);
+                listRootView.addView(newView);
+
             }
         });
         return rootView;
@@ -74,6 +79,7 @@ public class MainListFragment extends Fragment {
     void setNearUsers(List<User> users){
         List<User> oldUsers = users;
         List<User> newUsers = users;
+        //TODO: n*log(n)
         //add new Users to view
         for(User newUser: newUsers){
             boolean foundOld = false;

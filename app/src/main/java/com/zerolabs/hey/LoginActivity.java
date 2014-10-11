@@ -1,6 +1,8 @@
 package com.zerolabs.hey;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,12 +12,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 import com.zerolabs.hey.comm.RequestManager;
+import com.zerolabs.hey.comm.ServerComm;
+import com.zerolabs.hey.model.User;
 
 import java.util.Arrays;
 
@@ -69,6 +75,7 @@ public class LoginActivity extends FragmentActivity {
         private static final String LOG_TAG = LoginFragment.class.getSimpleName();
 
         private UiLifecycleHelper mUiHelper;
+        private ServerComm mServerComm;
 
         public LoginFragment() {
         }
@@ -90,6 +97,7 @@ public class LoginActivity extends FragmentActivity {
             super.onCreate(savedInstanceState);
             mUiHelper = new UiLifecycleHelper(getActivity(), mCallback);
             mUiHelper.onCreate(savedInstanceState);
+            mServerComm = new ServerComm(getActivity());
         }
 
         @Override
@@ -135,8 +143,29 @@ public class LoginActivity extends FragmentActivity {
         private void onSessionStateChange(Session session, SessionState state, Exception exception) {
             if (state.isOpened()) {
                 Log.i(LOG_TAG, "Logged in...");
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(intent);
+
+                WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+                User user = new User();
+                //TODO: correct registration
+                user.setMacAddress(wifiManager.getConnectionInfo().getMacAddress());
+
+                mServerComm.registerUser(user, new ServerComm.OnRegisterUserListener() {
+                    @Override
+                    public void onResponse(boolean successful) {
+                        if(successful){
+                            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                            Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
             } else if (state.isClosed()) {
                 Log.i(LOG_TAG, "Logged out...");
             }
