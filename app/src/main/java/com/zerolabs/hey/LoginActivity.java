@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.facebook.FacebookRequestError;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -144,28 +145,34 @@ public class LoginActivity extends FragmentActivity {
             if (state.isOpened()) {
                 Log.i(LOG_TAG, "Logged in...");
 
-                WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
-                User user = new User();
-                //TODO: correct registration
-                user.setMacAddress(wifiManager.getConnectionInfo().getMacAddress());
-
-                mServerComm.registerUser(user, new ServerComm.OnRegisterUserListener() {
+                final WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+                mServerComm.getFacebookData(session, new ServerComm.OnGetFacebookDataListener() {
                     @Override
-                    public void onResponse(boolean successful) {
-                        if(successful){
-                            Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                            Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
-                            startActivity(intent);
-                        }
+                    public void onResponse(User user) {
+                        user.setMacAddress(wifiManager.getConnectionInfo().getMacAddress());
+                        mServerComm.registerUser(user, new ServerComm.OnRegisterUserListener() {
+                            @Override
+                            public void onResponse(boolean successful) {
+                                if(successful){
+                                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                                    Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
+                                    startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
 
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(FacebookRequestError error) {
+                        Log.d(getClass().toString(), error.toString());
                         Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
-
-
             } else if (state.isClosed()) {
                 Log.i(LOG_TAG, "Logged out...");
             }
