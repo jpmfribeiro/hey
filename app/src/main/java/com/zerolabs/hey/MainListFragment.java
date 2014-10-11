@@ -2,11 +2,14 @@ package com.zerolabs.hey;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.zerolabs.hey.DiscoveryHelper.WLANP2PDiscovery;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
@@ -44,7 +47,7 @@ public class MainListFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
+
                 wlanp2PDiscovery.discoverMACAdresses(new WLANP2PDiscovery.MACListener() {
                     @Override
                     public void MACReturn(List<String> MACList) {
@@ -62,9 +65,9 @@ public class MainListFragment extends Fragment {
                         });
                     }
                 });
-                */
 
 
+                /*
                 View newView = LayoutInflater.from(getActivity()).inflate(R.layout.main_list_item, listRootView, false);
                 newView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -76,6 +79,7 @@ public class MainListFragment extends Fragment {
                             //TODO user wants to hey the other user
                         }
                         else{
+                            //view.animate().alpha(0).setDuration(1000).start();
                             view.setBackgroundColor(0x00000000);
                             viewIsActivatedHashMap.put(view, false);
                             //TODO user doesn't want to hey the other user
@@ -83,9 +87,10 @@ public class MainListFragment extends Fragment {
 
                     }
                 });
+
                 viewIsActivatedHashMap.put(newView, false);
                 listRootView.addView(newView);
-
+                */
             }
         });
         return rootView;
@@ -112,6 +117,7 @@ public class MainListFragment extends Fragment {
             }
             if(!foundOld){
                 View newView = LayoutInflater.from(getActivity()).inflate(R.layout.main_list_item, listRootView, false);
+                ((TextView)newView.findViewById(R.id.profile_username_textview)).setText(newUser.getUsername());
                 newView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

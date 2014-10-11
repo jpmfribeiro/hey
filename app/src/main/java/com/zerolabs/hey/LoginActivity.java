@@ -154,7 +154,7 @@ public class LoginActivity extends FragmentActivity {
                             @Override
                             public void onResponse(boolean successful) {
                                 if(successful){
-                                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
                                     Toast.makeText(getActivity(), "login successful", Toast.LENGTH_LONG).show();
                                     startActivity(intent);
                                 }
