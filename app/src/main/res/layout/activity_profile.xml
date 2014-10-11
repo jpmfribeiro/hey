@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:text="Ron"
+                android:text="..."
                 android:id="@+id/profile_username_textview"
                 android:textSize="@dimen/profile_text_size"
                 android:gravity="center_vertical"
@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:text="Zürich, CH"
+                android:text="..."
                 android:id="@+id/profile_location_textview"
                 android:textSize="@dimen/profile_text_size"
                 android:gravity="center_vertical"
@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:text="fucking manly"
+                android:text="..."
                 android:id="@+id/profile_gender_textview"
                 android:textSize="@dimen/profile_text_size"
                 android:gravity="center_vertical"

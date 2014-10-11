@@ -6,6 +6,7 @@
     <color name="grey_700">#646464</color>
     <color name="black">#000000</color>
     <color name="heyBlue">#2394b2</color>
+    <color name="selectedGreen">#ffb6ffb2</color>
 
     <color name="halfTransBlack">#30000000</color>
 

@@ -66,6 +66,24 @@ public class MainListFragment extends Fragment {
 
 
                 View newView = LayoutInflater.from(getActivity()).inflate(R.layout.main_list_item, listRootView, false);
+                newView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Boolean isActivated = viewIsActivatedHashMap.get(view);
+                        if(!isActivated){
+                            view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
+                            viewIsActivatedHashMap.put(view, true);
+                            //TODO user wants to hey the other user
+                        }
+                        else{
+                            view.setBackgroundColor(0x00000000);
+                            viewIsActivatedHashMap.put(view, false);
+                            //TODO user doesn't want to hey the other user
+                        }
+
+                    }
+                });
+                viewIsActivatedHashMap.put(newView, false);
                 listRootView.addView(newView);
 
             }
@@ -73,7 +91,10 @@ public class MainListFragment extends Fragment {
         return rootView;
     }
 
+
     HashMap <String, View> viewHashMap = new HashMap<String, View>();
+    HashMap <View, User> viewUserHashMap = new HashMap<View, User>();
+    HashMap <View, Boolean> viewIsActivatedHashMap = new HashMap<View, Boolean>();
     List<User> currentUsers = new LinkedList<User>();
 
     void setNearUsers(List<User> users){
@@ -91,8 +112,16 @@ public class MainListFragment extends Fragment {
             }
             if(!foundOld){
                 View newView = LayoutInflater.from(getActivity()).inflate(R.layout.main_list_item, listRootView, false);
+                newView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
+                    }
+                });
                 listRootView.addView(newView);
                 viewHashMap.put(newUser.getMacAddress(), newView);
+                viewUserHashMap.put(newView, newUser);
+                viewIsActivatedHashMap.put(newView, false);
             }
         }
         //remove old users that are no longer on the list
@@ -105,8 +134,11 @@ public class MainListFragment extends Fragment {
                 }
             }
             if(!foundNew){
-                listRootView.removeView(viewHashMap.get(oldUser.getMacAddress()));
+                View currentView = viewHashMap.get(oldUser.getMacAddress());
+                listRootView.removeView(currentView);
                 viewHashMap.remove(oldUser.getMacAddress());
+                viewUserHashMap.remove(currentView);
+                viewIsActivatedHashMap.remove(currentView);
             }
         }
     }
