@@ -16,6 +16,8 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 
+import java.util.Arrays;
+
 
 public class LoginActivity extends FragmentActivity {
 
@@ -74,6 +76,7 @@ public class LoginActivity extends FragmentActivity {
 
             LoginButton authButton = (LoginButton) rootView.findViewById(R.id.authButton);
             authButton.setFragment(this);
+            authButton.setReadPermissions(Arrays.asList("public_profile"));
 
             return rootView;
         }
