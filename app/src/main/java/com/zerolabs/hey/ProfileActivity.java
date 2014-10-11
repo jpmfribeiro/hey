@@ -49,6 +49,8 @@ public class ProfileActivity extends Activity {
         mServerComm = new ServerComm(this);
         mFacebookSession = Session.getActiveSession();
 
+        if(mFacebookSession == null) mFacebookSession = Session.openActiveSession(this, true, mCallback);
+
         if(mFacebookSession != null) {
             Log.d(LOG_TAG, "Session is: " + mFacebookSession.toString() + " with access token " + mFacebookSession.getAccessToken());
             mServerComm.getFacebookData(mFacebookSession, new ServerComm.OnGetFacebookDataListener() {

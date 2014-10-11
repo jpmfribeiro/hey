@@ -1,5 +1,8 @@
 package com.zerolabs.hey.model;
 
+import android.util.Log;
+
+import com.facebook.model.GraphPlace;
 import com.facebook.model.GraphUser;
 import com.zerolabs.hey.helpers.FormatHelper;
 
@@ -19,6 +22,8 @@ import java.util.GregorianCalendar;
  *
  */
 public class User {
+
+    public static String LOG_TAG = User.class.getSimpleName();
 
 // ATTRIBUTES
 
@@ -162,10 +167,20 @@ public class User {
         User resultUser = new User();
 
         resultUser.setUserId(graphUser.getId());
-        resultUser.setBirthdate(FormatHelper.getDateFromString(graphUser.getBirthday()));
+        Date birthdate = FormatHelper.getDateFromString(graphUser.getBirthday());
+
+        if (birthdate == null) Log.e(LOG_TAG, "Facebook didn't send any birthday!");
+        else resultUser.setBirthdate(birthdate);
+        
         resultUser.setUsername(graphUser.getName());
-        resultUser.setCity(graphUser.getLocation().getName());
-        resultUser.setGender(graphUser.getProperty("gender").equals("male"));
+
+        GraphPlace location = graphUser.getLocation();
+        if (location != null) resultUser.setCity(location.getName());
+        else Log.e(LOG_TAG, "Facebook didn't send any location!");
+
+        String gender = (String)graphUser.getProperty("gender");
+        if (gender != null) resultUser.setGender(gender.equals("male"));
+        else Log.e(LOG_TAG, "Facebook didn't send any gender information");
 
         return resultUser;
     }
