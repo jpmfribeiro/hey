@@ -11,25 +11,43 @@ import android.widget.Toast;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
 
 
 public class ProfileActivity extends Activity {
 
+    public static String LOG_TAG = ProfileActivity.class.getSimpleName();
+
     Context context;
+
+    private UiLifecycleHelper mUiHelper;
+    private Session.StatusCallback mCallback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            // onSessionStateChange(session, state, exception);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mUiHelper = new UiLifecycleHelper(ProfileActivity.this, mCallback);
+        mUiHelper.onCreate(savedInstanceState);
+
         context = this;
         setContentView(R.layout.activity_profile);
         mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
         mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
         mGenderTextView = (TextView)findViewById(R.id.profile_gender_textview);
         mServerComm = new ServerComm();
-        mFacebookSession = Session.getActiveSession();
-        if(mFacebookSession!=null) {
+        mFacebookSession = Session.openActiveSession(this, true, mCallback);
+
+        if(mFacebookSession != null) {
+            Log.d(LOG_TAG, "Session is: " + mFacebookSession.toString() + " with access token " + mFacebookSession.getAccessToken());
             mServerComm.getFacebookData(null, new ServerComm.OnGetFacebookDataListener() {
                 @Override
                 public void onResponse(User user) {
@@ -43,7 +61,28 @@ public class ProfileActivity extends Activity {
                     Log.d(getClass().toString(), error.toString());
                 }
             });
+        } else {
+            Log.d(LOG_TAG, "No session!!");
         }
+    }
+
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        mUiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mUiHelper.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mUiHelper.onSaveInstanceState(outState);
     }
 
     ServerComm mServerComm;
@@ -70,4 +109,5 @@ public class ProfileActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
