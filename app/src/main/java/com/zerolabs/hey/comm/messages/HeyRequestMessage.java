@@ -10,27 +10,27 @@ public class HeyRequestMessage implements RequestMessage {
 
     // CONSTANTS
 
-    public static String KEY_FROM = "from";
-    public static String KEY_TO = "to";
+    public static String KEY_SENDER = "sender";
+    public static String KEY_RECEIVER = "receiver";
 
     // ATTRIBUTES
 
-    private String mFromId;
-    private String mToId;
+    private String mSenderId;
+    private String mReceiverId;
 
     // CONSTRUCTOR
 
-    public HeyRequestMessage(String fromId, String toId) {
-        mFromId = fromId;
-        mToId = toId;
+    public HeyRequestMessage(String senderId, String receiverId) {
+        mSenderId = senderId;
+        mReceiverId = receiverId;
     }
 
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject heyJson = new JSONObject();
 
-        heyJson.put(KEY_FROM, mFromId);
-        heyJson.put(KEY_TO, mToId);
+        heyJson.put(KEY_SENDER, mSenderId);
+        heyJson.put(KEY_RECEIVER, mReceiverId);
 
         return heyJson;
     }
