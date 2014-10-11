@@ -227,7 +227,7 @@ public class User {
 
         resultUser.setCity(userJson.optString(JSONRep.KEY_CITY));
         resultUser.setAccessToken(userJson.optString(JSONRep.KEY_ACCESS_TOKEN));
-// TODO        resultUser.setBirthdate(FormatHelper.getDateFromString(userJson.optString(JSONRep.KEY_BIRTHDATE)));
+        resultUser.setBirthdate(FormatHelper.getDateFromJSON((JSONObject)userJson.opt(JSONRep.KEY_BIRTHDATE)));
         resultUser.setGender(userJson.optBoolean(JSONRep.KEY_GENDER, true));
         resultUser.setLikesFemale(userJson.optBoolean(JSONRep.KEY_LIKES_FEMALE, true));
         resultUser.setLikesMale(userJson.optBoolean(JSONRep.KEY_LIKES_MALE, true));

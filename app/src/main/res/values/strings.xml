@@ -29,4 +29,6 @@
     <string name="pref_likesfemale" translatable="false">likes_female</string>
     <string name="title_activity_meet">MeetActivity</string>
 
+    <string name="google_cloud_msg" templateMergeStrategy="preserve">AIzaSyB7BtIaBjNxUL3l4cEcSk8_xLqgfPmuEwk</string>
+
 </resources>
