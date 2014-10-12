@@ -92,7 +92,7 @@ public class GCMIntentService extends IntentService {
                     receiveHey(hey);
                 } else {
                     Talk talk = new Talk(extras);
-                    Log.d(LOG_TAG, "Received a Talk, will forward it to ChatActivity");
+                    Log.d(LOG_TAG, "Received a Talk, will forward it to MeetActivity");
                     sendResult(talk);
                 }
 

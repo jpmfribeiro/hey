@@ -1,7 +1,12 @@
 package com.zerolabs.hey;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +18,7 @@ import android.widget.TextView;
 import com.facebook.Session;
 import com.facebook.widget.ProfilePictureView;
 import com.zerolabs.hey.comm.ServerComm;
+import com.zerolabs.hey.comm.gcm.GCMIntentService;
 
 
 public class MeetActivity extends Activity {
@@ -21,6 +27,14 @@ public class MeetActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meet);
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String msg = intent.getStringExtra(GCMIntentService.TALK_MESSAGE);
+                addTextToChat(msg, false);
+            }
+        };
 
         mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
         mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
@@ -33,6 +47,8 @@ public class MeetActivity extends Activity {
         mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
     }
 
+
+    BroadcastReceiver receiver;
     ServerComm mServerComm;
     TextView mUserNameTextView;
     TextView mLocationTextView;
@@ -75,5 +91,17 @@ public class MeetActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(GCMIntentService.TALK_RESULT));
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 }
