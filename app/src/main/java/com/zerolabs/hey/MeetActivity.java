@@ -30,6 +30,16 @@ public class MeetActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meet);
 
+        mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
+        mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
+        mGenderTextView = (TextView)findViewById(R.id.profile_gender_textview);
+        mProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+        mProfilePictureView.setCropped(true);
+        mServerComm = new ServerComm(this);
+        mChatEditText = (EditText)findViewById(R.id.chat_edittext);
+        mFacebookSession = Session.getActiveSession();
+        mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
+
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -42,16 +52,6 @@ public class MeetActivity extends Activity {
                 addTextToChat(talk.getText(), false);
             }
         };
-
-        mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
-        mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
-        mGenderTextView = (TextView)findViewById(R.id.profile_gender_textview);
-        mProfilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
-        mProfilePictureView.setCropped(true);
-        mServerComm = new ServerComm(this);
-        mChatEditText = (EditText)findViewById(R.id.chat_edittext);
-        mFacebookSession = Session.getActiveSession();
-        mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
     }
 
     private void updateViews() {
