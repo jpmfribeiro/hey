@@ -66,5 +66,8 @@ public class Talk {
     public String getText() {
         return mTalkData.getString(KEY_TEXT);
     }
-    
+
+    public Bundle getBundle() {
+        return mTalkData;
+    }
 }
