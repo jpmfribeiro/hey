@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -23,12 +24,31 @@ public class GCMIntentService extends IntentService {
 
     private static String LOG_TAG = GCMIntentService.class.getSimpleName();
 
+    private LocalBroadcastManager broadcaster;
+
     public static final int NOTIFICATION_ID = 42;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
+    static final public String TALK_RESULT = "com.zerolabs.hey.comm.gcm.GCMIntentService.REQUEST_PROCESSED";
+    static final public String TALK_MESSAGE = "talk_message";
+
     public GCMIntentService() {
         super("GcmIntentService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        broadcaster = LocalBroadcastManager.getInstance(this);
+    }
+
+    public void sendResult(Talk talk) {
+        Intent intent = new Intent(TALK_RESULT);
+        if (talk != null)
+            intent.putExtra(TALK_MESSAGE, talk.getText());
+        broadcaster.sendBroadcast(intent);
     }
 
     @Override
@@ -71,9 +91,9 @@ public class GCMIntentService extends IntentService {
 
                     receiveHey(hey);
                 } else {
-//                    Talk talk = new Talk(extras);
-
-
+                    Talk talk = new Talk(extras);
+                    Log.d(LOG_TAG, "Received a Talk, will forward it to ChatActivity");
+                    sendResult(talk);
                 }
 
                 Log.i(LOG_TAG, "Received: " + extras.toString());
