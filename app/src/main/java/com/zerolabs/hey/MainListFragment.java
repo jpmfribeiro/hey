@@ -90,6 +90,8 @@ public class MainListFragment extends Fragment {
 
 
 
+
+
     HashMap <String, View> viewHashMap = new HashMap<String, View>();
     HashMap <View, User> viewUserHashMap = new HashMap<View, User>();
     HashMap <View, Boolean> viewIsActivatedHashMap = new HashMap<View, Boolean>();

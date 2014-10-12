@@ -2,8 +2,10 @@ package com.zerolabs.hey;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ public class MeetActivity extends Activity {
         mServerComm = new ServerComm(this);
         mChatEditText = (EditText)findViewById(R.id.chat_edittext);
         mFacebookSession = Session.getActiveSession();
+        mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
     }
 
     ServerComm mServerComm;
@@ -39,6 +42,17 @@ public class MeetActivity extends Activity {
     ViewGroup mChatHistoryContainer;
     private ProfilePictureView mProfilePictureView;
 
+
+    public void addTextToChat(String text, boolean ownText){
+        View newView;
+        if(ownText)
+            newView = LayoutInflater.from(this).inflate(R.layout.chat_list_item, mChatHistoryContainer);
+        else
+            newView = LayoutInflater.from(this).inflate(R.layout.chat_list_item2, mChatHistoryContainer);
+
+        TextView textView = (TextView)newView.findViewById(R.id.text);
+        textView.setText(text);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

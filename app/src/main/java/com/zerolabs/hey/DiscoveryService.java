@@ -36,7 +36,7 @@ public class DiscoveryService extends Service {
                 public void onResponse(boolean successful, List<User> retrievedUsers) {
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(service)
-                                    .setSmallIcon(R.drawable.ron_swanson)
+                                    .setSmallIcon(R.drawable.ic_launcher)
                                     .setContentTitle("There are friendly people near you")
                                     .setContentText(retrievedUsers.get(0).getUsername());
 
