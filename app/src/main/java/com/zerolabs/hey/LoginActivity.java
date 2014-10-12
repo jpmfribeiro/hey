@@ -29,6 +29,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.zerolabs.hey.comm.RequestManager;
 import com.zerolabs.hey.comm.ServerComm;
+import com.zerolabs.hey.model.Settings;
 import com.zerolabs.hey.model.User;
 
 import java.io.IOException;
@@ -332,6 +333,15 @@ public class LoginActivity extends FragmentActivity {
                         String macAddress = wifiManager.getConnectionInfo().getMacAddress();
                         user.setMacAddress(macAddress.substring(2));
                         user.setGCMId(regid);
+
+                        User sUser = Settings.getUser(context);
+                        if(sUser!=null);
+                        user.setMinAge(sUser.getMinAge());
+                        user.setMaxAge(sUser.getMaxAge());
+                        user.setLikesMale(sUser.likesMale());
+                        user.setLikesFemale(sUser.likesFemale());
+
+
                         Log.d(LOG_TAG, "GCMId: " + regid);
                         mServerComm.registerUser(user, new ServerComm.OnRegisterUserListener() {
                             @Override

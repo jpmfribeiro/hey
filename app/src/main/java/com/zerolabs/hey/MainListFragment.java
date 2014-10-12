@@ -119,7 +119,7 @@ public class MainListFragment extends Fragment {
                         Boolean isActivated = viewIsActivatedHashMap.get(view);
                         if(!isActivated){
                             view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
-                            viewIsActivatedHashMap.put(view, true);
+                            //viewIsActivatedHashMap.put(view, true);
                             mServerComm.sendHey(viewUserHashMap.get(view), new ServerComm.OnHeyListener() {
                                 @Override
                                 public void onResponse(boolean successful) {

@@ -69,6 +69,15 @@ public class ProfileActivity extends Activity {
         mUser = Settings.getUser(context);
         mAgeRangeSeekBar.setSelectedMinValue(mUser.getMinAge());
         mAgeRangeSeekBar.setSelectedMaxValue(mUser.getMaxAge());
+
+
+        if(mAgeRangeSeekBar.getSelectedMaxValue()!=55) {
+            mAgeRangeTextView.setText(" " + mAgeRangeSeekBar.getSelectedMinValue() + "-" + mAgeRangeSeekBar.getSelectedMaxValue() + " ");
+        } else {
+            mAgeRangeTextView.setText(" " + mAgeRangeSeekBar.getSelectedMinValue() + "-" + mAgeRangeSeekBar.getSelectedMaxValue() + "+");
+        }
+
+
         mWomenCheckBox.setChecked(mUser.likesFemale());
         mMenCheckBox.setChecked(mUser.likesMale());
 
