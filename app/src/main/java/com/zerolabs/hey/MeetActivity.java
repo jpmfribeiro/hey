@@ -42,16 +42,20 @@ public class MeetActivity extends Activity {
     ViewGroup mChatHistoryContainer;
     private ProfilePictureView mProfilePictureView;
 
+    public void send(View view){
+        addTextToChat(mChatEditText.getText().toString(), true);
+    }
 
     public void addTextToChat(String text, boolean ownText){
         View newView;
         if(ownText)
-            newView = LayoutInflater.from(this).inflate(R.layout.chat_list_item, mChatHistoryContainer);
+            newView = LayoutInflater.from(this).inflate(R.layout.chat_list_item, mChatHistoryContainer, false);
         else
-            newView = LayoutInflater.from(this).inflate(R.layout.chat_list_item2, mChatHistoryContainer);
+            newView = LayoutInflater.from(this).inflate(R.layout.chat_list_item2, mChatHistoryContainer, false);
 
         TextView textView = (TextView)newView.findViewById(R.id.text);
         textView.setText(text);
+        mChatHistoryContainer.addView(newView);
     }
 
     @Override

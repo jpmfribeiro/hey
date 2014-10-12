@@ -77,17 +77,33 @@
         android:background="#999999"
         android:layout_weight="1">
         <LinearLayout
+            android:layout_margin="10dp"
             android:layout_width="fill_parent"
             android:animateLayoutChanges="true"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:showDividers="middle"
+            android:divider="@color/black"
             android:id="@+id/chat_history"></LinearLayout>
         </ScrollView>
-    <EditText
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/chat_edittext"
-        android:inputType="text"/>
+        android:orientation="horizontal">
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:id="@+id/chat_edittext"
+            android:inputType="text"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@android:drawable/ic_menu_send"
+            android:onClick="send"/>
+        </LinearLayout>
+
 
 
 
