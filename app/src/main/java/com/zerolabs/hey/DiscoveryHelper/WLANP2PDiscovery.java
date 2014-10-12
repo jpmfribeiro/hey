@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.Collection;
@@ -38,6 +39,20 @@ public class WLANP2PDiscovery {
         cMacListener = macListener;
         mWifiP2pManager.discoverPeers(mChannel, mPeerToMACListener);
     }
+
+
+    public void automateDiscovery(final MACListener macListener, int interval){
+        stepCaller = new StepCaller(new Runnable() {
+            @Override
+            public void run() {
+                discoverMACAdresses(macListener);
+            }
+        }, interval);
+    }
+
+    StepCaller stepCaller;
+
+    Handler mHandler = new Handler();
 
     PeerToMACListener mPeerToMACListener = new PeerToMACListener();
     class PeerToMACListener implements WifiP2pManager.ActionListener {

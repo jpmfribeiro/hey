@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.facebook.widget.ProfilePictureView;
 import com.zerolabs.hey.DiscoveryHelper.WLANP2PDiscovery;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.model.User;
@@ -29,6 +30,31 @@ public class MainListFragment extends Fragment {
         wlanp2PDiscovery = new WLANP2PDiscovery(getActivity());
         mServerComm = new ServerComm(getActivity());
         wlanp2PDiscovery.initialize();
+
+        wlanp2PDiscovery.automateDiscovery(new WLANP2PDiscovery.MACListener() {
+            @Override
+            public void MACReturn(List<String> MACList) {
+                mServerComm.getUsersFromMacAddresses(MACList, new ServerComm.OnGetUsersListener() {
+                    @Override
+                    public void onResponse(boolean successful, List<User> retrievedUsers) {
+                        if(successful) {
+                            Log.v(getClass().toString(), retrievedUsers.toString());
+                            setNearUsers(retrievedUsers);
+                        }
+                        else
+                        {
+                            Log.v(getClass().toString(), "unsuccessful");
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(getClass().toString(), error.toString());
+                    }
+                });
+            }
+        }, 4000);
+
     }
 
     public MainListFragment() {
@@ -45,62 +71,9 @@ public class MainListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         listRootView = (ViewGroup)rootView.findViewById(R.id.listContainer);
-        button = (Button)rootView.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                wlanp2PDiscovery.discoverMACAdresses(new WLANP2PDiscovery.MACListener() {
-                    @Override
-                    public void MACReturn(List<String> MACList) {
-                        mServerComm.getUsersFromMacAddresses(MACList, new ServerComm.OnGetUsersListener() {
-                            @Override
-                            public void onResponse(boolean successful, List<User> retrievedUsers) {
-                                if(successful) {
-                                    Log.v(getClass().toString(), retrievedUsers.toString());
-                                    setNearUsers(retrievedUsers);
-                                }
-                                else
-                                {
-                                    Log.v(getClass().toString(), "unsuccessful");
-                                }
-                            }
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d(getClass().toString(), error.toString());
-                            }
-                        });
-                    }
-                });
 
 
-                /*
-                View newView = LayoutInflater.from(getActivity()).inflate(R.layout.main_list_item, listRootView, false);
-                newView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Boolean isActivated = viewIsActivatedHashMap.get(view);
-                        if(!isActivated){
-                            view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
-                            viewIsActivatedHashMap.put(view, true);
-                            //TODO user wants to hey the other user
-                        }
-                        else{
-                            //view.animate().alpha(0).setDuration(1000).start();
-                            view.setBackgroundColor(0x00000000);
-                            viewIsActivatedHashMap.put(view, false);
-                            //TODO user doesn't want to hey the other user
-                        }
 
-                    }
-                });
-
-                viewIsActivatedHashMap.put(newView, false);
-                listRootView.addView(newView);
-                */
-            }
-        });
 
         profilButton = (Button)rootView.findViewById(R.id.button2);
         profilButton.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +98,8 @@ public class MainListFragment extends Fragment {
     void setNearUsers(List<User> users){
         List<User> oldUsers = currentUsers;
         List<User> newUsers = users;
+
+        Log.v("newUsers length: ", newUsers.size()+"");
         //TODO: n*log(n)
         //add new Users to view
         for(User newUser: newUsers){
@@ -161,9 +136,8 @@ public class MainListFragment extends Fragment {
                             });
                         }
                         else{
-                            //view.animate().alpha(0).setDuration(1000).start();
-                            view.setBackgroundColor(0x00000000);
-                            viewIsActivatedHashMap.put(view, false);
+                            //view.setBackgroundColor(0x00000000);
+                            //viewIsActivatedHashMap.put(view, false);
                             //TODO user doesn't want to hey the other user
                         }
 
@@ -172,12 +146,13 @@ public class MainListFragment extends Fragment {
 
 
                 ((TextView)newView.findViewById(R.id.profile_username_textview)).setText(newUser.getUsername());
-                newView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
-                    }
-                });
+                ProfilePictureView profilePictureView = ((ProfilePictureView)newView.findViewById(R.id.selection_profile_pic));
+                profilePictureView.setCropped(true);
+                profilePictureView.setProfileId(newUser.getUserId());
+
+                ((TextView)newView.findViewById(R.id.profile_location_textview)).setText(newUser.getCity());
+                ((TextView)newView.findViewById(R.id.profile_gender_textview)).setText(newUser.isMale() ? "man" : "woman");
+
                 listRootView.addView(newView);
                 viewHashMap.put(newUser.getMacAddress(), newView);
                 viewUserHashMap.put(newView, newUser);
