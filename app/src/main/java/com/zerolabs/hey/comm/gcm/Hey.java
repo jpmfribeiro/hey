@@ -1,6 +1,7 @@
 package com.zerolabs.hey.comm.gcm;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.zerolabs.hey.helpers.FormatHelper;
 import com.zerolabs.hey.model.User;
@@ -11,6 +12,8 @@ import org.json.JSONObject;
  * Created by jpedro on 12.10.14.
  */
 public class Hey {
+
+    public static String LOG_TAG = Hey.class.getSimpleName();
 
     // CONSTANTS
 
@@ -47,14 +50,17 @@ public class Hey {
     public User getSender(){
         User sender = new User();
 
-        JSONObject senderData = (JSONObject)mHeyData.get(KEY_SENDER);
-
         try {
-            sender.setUserId(senderData.getString(KEY_USERID));
-            sender.setCity(senderData.getString(KEY_CITY));
-            sender.setUsername(senderData.getString(KEY_USERNAME));
-            sender.setBirthdate(FormatHelper.getDateFromJSON(senderData.getJSONObject(KEY_BIRTHDATE)));
-            sender.setGender(senderData.getString(KEY_GENDER).equals(VALUE_MALE));
+            sender.setUserId(mHeyData.getString(KEY_USERID));
+            Log.d(LOG_TAG, "mHeyData userid: " + mHeyData.getString(KEY_USERID));
+            sender.setCity(mHeyData.getString(KEY_CITY));
+            Log.d(LOG_TAG, "mHeyData city: " + mHeyData.getString(KEY_CITY));
+            sender.setUsername(mHeyData.getString(KEY_USERNAME));
+            Log.d(LOG_TAG, "mHeyData username: " + mHeyData.getString(KEY_USERNAME));
+            sender.setBirthdate(FormatHelper.getDateFromJSON(new JSONObject((String)mHeyData.get(KEY_BIRTHDATE))));
+            Log.d(LOG_TAG, "mHeyData birthdate: " + FormatHelper.getDateFromJSON(new JSONObject((String)mHeyData.get(KEY_BIRTHDATE))).toString());
+            sender.setGender(mHeyData.getString(KEY_GENDER).equals(VALUE_MALE));
+            Log.d(LOG_TAG, "mHeyData gender: " + mHeyData.getString(KEY_GENDER).equals(VALUE_MALE));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,6 +68,8 @@ public class Hey {
         return sender;
     }
 
+
+    public Bundle getBundle() { return mHeyData; }
 
 
 }
