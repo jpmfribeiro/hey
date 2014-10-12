@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,6 +31,7 @@ public class MainActivity extends Activity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Bundle heyData = intent.getBundleExtra(GCMIntentService.HEY_MESSAGE);
+                Log.v(getClass().toString(), "received broadcast");
                 Hey hey = new Hey(heyData);
                 if(mFragment.hasHeyed(hey.getSender())){
                     Intent meetIntent = new Intent(getApplicationContext(), MeetActivity.class);
@@ -47,7 +49,6 @@ public class MainActivity extends Activity {
                     .commit();
         }
 
-        Intent serviceIntent = new Intent()
     }
 
 
