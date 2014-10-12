@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.zerolabs.hey.MainActivity;
+import com.zerolabs.hey.R;
 import com.zerolabs.hey.model.User;
 
 /**
@@ -21,7 +23,7 @@ public class GCMIntentService extends IntentService {
 
     private static String LOG_TAG = GCMIntentService.class.getSimpleName();
 
-    public static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_ID = 42;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
@@ -59,8 +61,10 @@ public class GCMIntentService extends IntentService {
                 Log.d(LOG_TAG, "Received: " + extras.toString());
 
                 // This loop represents the service doing some work.
-                if (extras.getInt(Hey.KEY_IS_HEY) == 1) {
+                if (extras.getString(Hey.KEY_IS_HEY).equals("1")) {
                     Hey hey = new Hey(extras);
+
+                    Log.d(LOG_TAG, "That was a hey!!");
 
                     Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(VIBRATOR_SERVICE);
                     vibrator.vibrate(500);
@@ -86,19 +90,34 @@ public class GCMIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+        Intent contentIntent = new Intent(this, MainActivity.class);
 
         String msg = sender.getUsername() + " sent you a hey!";
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setContentTitle("hey!")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
+                        .setContentText(msg)
+                    .setSmallIcon(R.drawable.ic_launcher);
 
-        mBuilder.setContentIntent(contentIntent);
+        Log.d(LOG_TAG, "A notification should pop up!");
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // the application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(contentIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        mBuilder.setContentIntent(resultPendingIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
