@@ -19,6 +19,8 @@ import com.facebook.Session;
 import com.facebook.widget.ProfilePictureView;
 import com.zerolabs.hey.comm.ServerComm;
 import com.zerolabs.hey.comm.gcm.GCMIntentService;
+import com.zerolabs.hey.comm.gcm.Talk;
+import com.zerolabs.hey.model.User;
 
 
 public class MeetActivity extends Activity {
@@ -31,8 +33,10 @@ public class MeetActivity extends Activity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String msg = intent.getStringExtra(GCMIntentService.TALK_MESSAGE);
-                addTextToChat(msg, false);
+                Bundle talkData = intent.getBundleExtra(GCMIntentService.TALK_MESSAGE);
+                Talk talk = new Talk(talkData);
+                if (chatPartner == null) chatPartner = talk.getSender();
+                addTextToChat(talk.getText(), false);
             }
         };
 
@@ -47,7 +51,7 @@ public class MeetActivity extends Activity {
         mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
     }
 
-
+    User chatPartner;
     BroadcastReceiver receiver;
     ServerComm mServerComm;
     TextView mUserNameTextView;

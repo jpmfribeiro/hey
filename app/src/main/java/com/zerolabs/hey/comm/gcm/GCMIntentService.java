@@ -47,7 +47,7 @@ public class GCMIntentService extends IntentService {
     public void sendResult(Talk talk) {
         Intent intent = new Intent(TALK_RESULT);
         if (talk != null)
-            intent.putExtra(TALK_MESSAGE, talk.getText());
+            intent.putExtra(TALK_MESSAGE, talk.getBundle());
         broadcaster.sendBroadcast(intent);
     }
 
