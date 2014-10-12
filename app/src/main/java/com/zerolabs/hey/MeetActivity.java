@@ -43,6 +43,7 @@ public class MeetActivity extends Activity {
             chatPartner.setUserId(userData.getString(User.JSONRep.KEY_USERID));
             chatPartner.setUsername(userData.getString(User.JSONRep.KEY_USERNAME));
             chatPartner.setCity(userData.getString(User.JSONRep.KEY_CITY));
+            updateViews();
         }
 
         mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
@@ -75,7 +76,7 @@ public class MeetActivity extends Activity {
     Context context = this;
 
     private void updateViews() {
-        mUserNameTextView.setText(chatPartner.getUsername() + ", " + chatPartner.getAge());
+        mUserNameTextView.setText(chatPartner.getUsername());
         mLocationTextView.setText(chatPartner.getCity());
         mGenderTextView.setText(chatPartner.isMale() ? "man" : "woman");
         mProfilePictureView.setProfileId(chatPartner.getUserId());
