@@ -35,17 +35,6 @@ public class MeetActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meet);
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            Bundle userData = intent.getBundleExtra(KEY_PARTNER);
-            chatPartner = new User();
-            chatPartner.setGender(userData.getString(User.JSONRep.KEY_GENDER).equals(User.JSONRep.KEY_GENDER));
-            chatPartner.setUserId(userData.getString(User.JSONRep.KEY_USERID));
-            chatPartner.setUsername(userData.getString(User.JSONRep.KEY_USERNAME));
-            chatPartner.setCity(userData.getString(User.JSONRep.KEY_CITY));
-            updateViews();
-        }
-
         mUserNameTextView = (TextView)findViewById(R.id.profile_username_textview);
         mLocationTextView = (TextView)findViewById(R.id.profile_location_textview);
         mGenderTextView = (TextView)findViewById(R.id.profile_gender_textview);
@@ -57,6 +46,20 @@ public class MeetActivity extends Activity {
         mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
 
         mScrollView = (ScrollView)findViewById(R.id.bigScrollView);
+
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle userData = intent.getBundleExtra(KEY_PARTNER);
+            chatPartner = new User();
+            chatPartner.setGender(userData.getString(User.JSONRep.KEY_GENDER).equals(User.JSONRep.KEY_GENDER));
+            chatPartner.setUserId(userData.getString(User.JSONRep.KEY_USERID));
+            chatPartner.setUsername(userData.getString(User.JSONRep.KEY_USERNAME));
+            chatPartner.setCity(userData.getString(User.JSONRep.KEY_CITY));
+            updateViews();
+        }
+
+
 
 
         receiver = new BroadcastReceiver() {
