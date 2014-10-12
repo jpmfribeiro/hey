@@ -119,7 +119,7 @@ public class MainListFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Boolean isActivated = viewIsActivatedHashMap.get(view);
-                        if(!isActivated){
+                        //if(!isActivated){
                             view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
                             viewIsActivatedHashMap.put(view, true);
 
@@ -141,6 +141,7 @@ public class MainListFragment extends Fragment {
                                             userData.putString(User.JSONRep.KEY_GENDER, newUser.isMale() ? User.JSONRep.VALUE_MALE : User.JSONRep.VALUE_FEMALE);
                                             intent.putExtra(MeetActivity.KEY_PARTNER, userData);
                                             startActivity(intent);
+                                            getActivity().finish();
                                         }
                                     }
                                     else
@@ -152,12 +153,8 @@ public class MainListFragment extends Fragment {
                                     Log.v(getClass().toString(), "Hey unsuccessful: " + error.toString());
                                 }
                             });
-                        }
-                        else{
-                            //view.setBackgroundColor(0x00000000);
-                            //viewIsActivatedHashMap.put(view, false);
-                            //TODO user doesn't want to hey the other user
-                        }
+                        //}
+
 
                     }
                 });

@@ -62,6 +62,7 @@
 
         <activity
             android:name=".MeetActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:label="@string/title_activity_meet" >
 

@@ -6,13 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.zerolabs.hey.comm.gcm.GCMIntentService;
 import com.zerolabs.hey.comm.gcm.Hey;
+import com.zerolabs.hey.model.User;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class MainActivity extends Activity {
@@ -26,8 +31,36 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //get incoming hey
+        int ch;
+        StringBuffer fileContent = new StringBuffer("");
+        FileInputStream fis;
+        try {
+            fis = openFileInput("incomingHey.txt");
+            try {
+                while( (ch = fis.read()) != -1)
+                    fileContent.append((char)ch);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String data = new String(fileContent);
+
+        deleteFile("incomingHey.txt");
+
+
+
+
         setContentView(R.layout.activity_main);
         mFragment = new MainListFragment();
+
+        User user = new User();
+        user.setUserId(data);
+        mFragment.registerIncomingHey(user);
 
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -39,6 +72,7 @@ public class MainActivity extends Activity {
                     Intent meetIntent = new Intent(getApplicationContext(), MeetActivity.class);
                     meetIntent.putExtra(MeetActivity.KEY_PARTNER, heyData);
                     startActivity(meetIntent);
+                    finish();
                 } else {
                     mFragment.registerIncomingHey(hey.getSender());
                 }

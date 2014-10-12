@@ -17,6 +17,10 @@ import com.zerolabs.hey.MainActivity;
 import com.zerolabs.hey.R;
 import com.zerolabs.hey.model.User;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 /**
  * Created by jpedro on 11.10.14.
  */
@@ -117,6 +121,34 @@ public class GCMIntentService extends IntentService {
 
 
     private void receiveHey(Hey hey) {
+
+        String FILENAME ="incomingHey.txt";
+        String strMsgToSave = hey.getSender().getUserId();
+        FileOutputStream fos;
+        try
+        {
+            fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            try
+            {
+                fos.write( strMsgToSave.getBytes() );
+                fos.close();
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+
+
+
+
         User sender = hey.getSender();
 
         mNotificationManager = (NotificationManager)
