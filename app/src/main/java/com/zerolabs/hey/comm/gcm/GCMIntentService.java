@@ -30,8 +30,11 @@ public class GCMIntentService extends IntentService {
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
-    static final public String TALK_RESULT = "com.zerolabs.hey.comm.gcm.GCMIntentService.REQUEST_PROCESSED";
+    static final public String TALK_RESULT = "com.zerolabs.hey.comm.gcm.GCMIntentService.talk.REQUEST_PROCESSED";
     static final public String TALK_MESSAGE = "talk_message";
+
+    static final public String HEY_RESULT = "com.zerolabs.hey.comm.gcm.GCMIntentService.hey.REQUEST_PROCESSED";
+    static final public String HEY_MESSAGE = "hey_message";
 
     public GCMIntentService() {
         super("GcmIntentService");
@@ -44,10 +47,17 @@ public class GCMIntentService extends IntentService {
         broadcaster = LocalBroadcastManager.getInstance(this);
     }
 
-    public void sendResult(Talk talk) {
+    public void sendTalkResult(Talk talk) {
         Intent intent = new Intent(TALK_RESULT);
         if (talk != null)
             intent.putExtra(TALK_MESSAGE, talk.getBundle());
+        broadcaster.sendBroadcast(intent);
+    }
+
+    public void sendHeyResult(Hey hey) {
+        Intent intent = new Intent(HEY_RESULT);
+        if(hey != null)
+            intent.putExtra(HEY_MESSAGE, hey.getBundle());
         broadcaster.sendBroadcast(intent);
     }
 
@@ -90,10 +100,12 @@ public class GCMIntentService extends IntentService {
                     vibrator.vibrate(500);
 
                     receiveHey(hey);
+                    sendHeyResult(hey);
+
                 } else {
                     Talk talk = new Talk(extras);
                     Log.d(LOG_TAG, "Received a Talk, will forward it to MeetActivity");
-                    sendResult(talk);
+                    sendTalkResult(talk);
                 }
 
                 Log.i(LOG_TAG, "Received: " + extras.toString());

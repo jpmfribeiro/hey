@@ -73,8 +73,6 @@ public class MainListFragment extends Fragment {
         listRootView = (ViewGroup)rootView.findViewById(R.id.listContainer);
 
 
-
-
         profilButton = (Button)rootView.findViewById(R.id.button2);
         profilButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +90,8 @@ public class MainListFragment extends Fragment {
 
 
 
+    HashMap <String, Boolean> heyHashMap = new HashMap<String, Boolean>();
+    HashMap <String, Boolean> wasHeyedHashMap = new HashMap<String, Boolean>();
     HashMap <String, View> viewHashMap = new HashMap<String, View>();
     HashMap <View, User> viewUserHashMap = new HashMap<View, User>();
     HashMap <View, Boolean> viewIsActivatedHashMap = new HashMap<View, Boolean>();
@@ -104,7 +104,7 @@ public class MainListFragment extends Fragment {
         Log.v("newUsers length: ", newUsers.size()+"");
         //TODO: n*log(n)
         //add new Users to view
-        for(User newUser: newUsers){
+        for(final User newUser: newUsers){
             boolean foundOld = false;
             for(User oldUser: oldUsers){
                 if(oldUser.getMacAddress().equals(newUser.getMacAddress())){
@@ -121,19 +121,28 @@ public class MainListFragment extends Fragment {
                         Boolean isActivated = viewIsActivatedHashMap.get(view);
                         if(!isActivated){
                             view.setBackgroundColor(getResources().getColor(R.color.selectedGreen));
-                            //viewIsActivatedHashMap.put(view, true);
+                            viewIsActivatedHashMap.put(view, true);
+
+
+                            final boolean alreadyHeyedYou = wasHeyedHashMap.containsKey(newUser.getUserId());
+                            heyHashMap.put(newUser.getUserId(), true);
                             mServerComm.sendHey(viewUserHashMap.get(view), new ServerComm.OnHeyListener() {
                                 @Override
                                 public void onResponse(boolean successful) {
-                                    if(successful)
+                                    if (successful) {
                                         Log.v(getClass().toString(), "Hey successful");
+                                        if (alreadyHeyedYou) {
+                                            Intent intent = new Intent(getActivity(), MeetActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    }
                                     else
                                         Log.v(getClass().toString(), "Hey unsuccessful");
                                 }
 
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Log.v(getClass().toString(), "Hey unsuccessful: "+error.toString());
+                                    Log.v(getClass().toString(), "Hey unsuccessful: " + error.toString());
                                 }
                             });
                         }
@@ -179,6 +188,14 @@ public class MainListFragment extends Fragment {
             }
         }
         currentUsers = users;
+    }
+
+    public boolean hasHeyed(User user) {
+        return heyHashMap.containsKey(user.getUserId());
+    }
+
+    public void registerIncomingHey(User user) {
+        wasHeyedHashMap.put(user.getUserId(), true);
     }
 
 

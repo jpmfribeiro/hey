@@ -1,23 +1,49 @@
 package com.zerolabs.hey;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.zerolabs.hey.comm.gcm.GCMIntentService;
+import com.zerolabs.hey.comm.gcm.Hey;
 
 
 public class MainActivity extends Activity {
 
     public static String KEY_HEY = "hey";
 
+    private BroadcastReceiver mBroadcastReceiver;
+    private MainListFragment mFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mFragment = new MainListFragment();
+
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Bundle heyData = intent.getBundleExtra(GCMIntentService.HEY_MESSAGE);
+                Hey hey = new Hey(heyData);
+                if(mFragment.hasHeyed(hey.getSender())){
+                    Intent meetIntent = new Intent(getApplicationContext(), MeetActivity.class);
+                    startActivity(meetIntent);
+                } else {
+
+                }
+
+            }
+        };
+
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new MainListFragment())
+                    .add(R.id.container, mFragment)
                     .commit();
         }
 
