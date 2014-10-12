@@ -133,6 +133,13 @@ public class MainListFragment extends Fragment {
                                         Log.v(getClass().toString(), "Hey successful");
                                         if (alreadyHeyedYou) {
                                             Intent intent = new Intent(getActivity(), MeetActivity.class);
+
+                                            Bundle userData = new Bundle();
+                                            userData.putString(User.JSONRep.KEY_USERNAME, newUser.getUsername());
+                                            userData.putString(User.JSONRep.KEY_USERID, newUser.getUserId());
+                                            userData.putString(User.JSONRep.KEY_CITY, newUser.getCity());
+                                            userData.putString(User.JSONRep.KEY_GENDER, newUser.isMale() ? User.JSONRep.VALUE_MALE : User.JSONRep.VALUE_FEMALE);
+                                            intent.putExtra(MeetActivity.KEY_PARTNER, userData);
                                             startActivity(intent);
                                         }
                                     }

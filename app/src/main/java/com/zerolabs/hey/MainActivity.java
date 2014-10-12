@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
                 Hey hey = new Hey(heyData);
                 if(mFragment.hasHeyed(hey.getSender())){
                     Intent meetIntent = new Intent(getApplicationContext(), MeetActivity.class);
+                    meetIntent.putExtra(MeetActivity.KEY_PARTNER, heyData);
                     startActivity(meetIntent);
                 } else {
                     mFragment.registerIncomingHey(hey.getSender());
