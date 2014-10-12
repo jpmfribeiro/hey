@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.Session;
@@ -31,6 +32,7 @@ public class MeetActivity extends Activity {
         mChatEditText = (EditText)findViewById(R.id.chat_edittext);
         mFacebookSession = Session.getActiveSession();
         mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
+        mScrollView = (ScrollView)findViewById(R.id.bigScrollView);
     }
 
     ServerComm mServerComm;
@@ -40,10 +42,16 @@ public class MeetActivity extends Activity {
     Session mFacebookSession;
     EditText mChatEditText;
     ViewGroup mChatHistoryContainer;
+    ScrollView mScrollView;
     private ProfilePictureView mProfilePictureView;
 
     public void send(View view){
-        addTextToChat(mChatEditText.getText().toString(), true);
+        String newtext = mChatEditText.getText().toString();
+        if(!newtext.equals("")) {
+            addTextToChat(mChatEditText.getText().toString(), true);
+            mChatEditText.setText("");
+            //TODO send text to partner
+        }
     }
 
     public void addTextToChat(String text, boolean ownText){
@@ -56,6 +64,7 @@ public class MeetActivity extends Activity {
         TextView textView = (TextView)newView.findViewById(R.id.text);
         textView.setText(text);
         mChatHistoryContainer.addView(newView);
+        mScrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     @Override

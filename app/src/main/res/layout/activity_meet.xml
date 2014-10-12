@@ -6,21 +6,28 @@
     android:orientation="vertical"
     tools:context="com.zerolabs.hey.MeetActivity">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@color/heyBlue"
-        android:gravity="center">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
             android:text="let's talk!"
+            android:gravity="center"
+            android:background="@color/heyBlue"
             android:textSize="@dimen/profile_text_size"
             android:textColor="#FFFFFF"/>
-        </LinearLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:background="#999999"
+        android:id="@+id/bigScrollView"
+        android:layout_weight="1">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:id="@+id/topPart"
+        android:background="#FFFFFF"
         android:layout_height="160dp"
         android:orientation="horizontal">
 
@@ -71,20 +78,22 @@
                 android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:background="#999999"
-        android:layout_weight="1">
+
+
         <LinearLayout
             android:layout_margin="10dp"
             android:layout_width="fill_parent"
+            android:layout_below="@+id/topPart"
             android:animateLayoutChanges="true"
+            android:background="#999999"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:showDividers="middle"
-            android:divider="@color/black"
             android:id="@+id/chat_history"></LinearLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/chat_history"/>
+        </RelativeLayout>
         </ScrollView>
     <LinearLayout
         android:layout_width="fill_parent"
