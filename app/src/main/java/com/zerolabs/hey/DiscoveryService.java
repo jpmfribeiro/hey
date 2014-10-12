@@ -34,29 +34,31 @@ public class DiscoveryService extends Service {
             serverComm.getUsersFromMacAddresses(MACList, new ServerComm.OnGetUsersListener() {
                 @Override
                 public void onResponse(boolean successful, List<User> retrievedUsers) {
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(service)
-                                    .setSmallIcon(R.drawable.ic_launcher)
-                                    .setContentTitle("There are friendly people near you")
-                                    .setContentText(retrievedUsers.get(0).getUsername());
+                    if(successful && retrievedUsers.size()>0) {
+                        NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(service)
+                                        .setSmallIcon(R.drawable.ic_launcher)
+                                        .setContentTitle("There are friendly people near you")
+                                        .setContentText(retrievedUsers.get(0).getUsername());
 
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(service);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(service);
 // Adds the back stack for the Intent (but not the Intent itself)
-                    stackBuilder.addParentStack(LoginActivity.class);
+                        stackBuilder.addParentStack(LoginActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
-                    Intent resultIntent = new Intent(service, LoginActivity.class);
+                        Intent resultIntent = new Intent(service, LoginActivity.class);
 
-                    stackBuilder.addNextIntent(resultIntent);
-                    PendingIntent resultPendingIntent =
-                            stackBuilder.getPendingIntent(
-                                    0,
-                                    PendingIntent.FLAG_UPDATE_CURRENT
-                            );
-                    mBuilder.setContentIntent(resultPendingIntent);
+                        stackBuilder.addNextIntent(resultIntent);
+                        PendingIntent resultPendingIntent =
+                                stackBuilder.getPendingIntent(
+                                        0,
+                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                );
+                        mBuilder.setContentIntent(resultPendingIntent);
 
-                    mBuilder.setContentIntent(resultPendingIntent);
-                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotificationManager.notify(0, mBuilder.build());
+                        mBuilder.setContentIntent(resultPendingIntent);
+                        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        mNotificationManager.notify(0, mBuilder.build());
+                    }
 
                 }
 

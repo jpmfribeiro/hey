@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.facebook.Session;
 import com.facebook.widget.ProfilePictureView;
 import com.zerolabs.hey.comm.ServerComm;
@@ -58,6 +60,8 @@ public class MeetActivity extends Activity {
         };
     }
 
+    Context context = this;
+
     private void updateViews() {
         mUserNameTextView.setText(chatPartner.getUsername() + ", " + chatPartner.getAge());
         mLocationTextView.setText(chatPartner.getCity());
@@ -82,7 +86,18 @@ public class MeetActivity extends Activity {
         if(!newtext.equals("")) {
             addTextToChat(mChatEditText.getText().toString(), true);
             mChatEditText.setText("");
-            //TODO send text to partner
+            mServerComm.talk(chatPartner, newtext, new ServerComm.OnTalkListener() {
+                @Override
+                public void onResponse(boolean successful) {
+                    if(!successful)
+                        Toast.makeText(getApplicationContext(), "there was an error", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "there was an error: "+error.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
