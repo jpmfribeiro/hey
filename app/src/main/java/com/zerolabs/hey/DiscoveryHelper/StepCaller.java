@@ -10,6 +10,7 @@ public class StepCaller implements Runnable{
         this.step = step;
 
         mHandler = new android.os.Handler();
+        runnable.run();
         mHandler.postDelayed(this, step);
     }
 

@@ -58,6 +58,8 @@ public class LoginActivity extends FragmentActivity {
 
     private LoginFragment mLoginFragment;
 
+    private Intent mServiceIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,11 @@ public class LoginActivity extends FragmentActivity {
             if (regid.isEmpty()) {
                 registerInBackground();
             }
+
+            if(mServiceIntent == null)
+                mServiceIntent = new Intent(this, DiscoveryService.class);
+
+            startService(mServiceIntent);
 
             setContentView(R.layout.activity_login);
             if (savedInstanceState == null) {
