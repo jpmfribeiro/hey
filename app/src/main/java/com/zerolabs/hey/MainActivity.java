@@ -8,6 +8,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
+    public static String KEY_HEY = "hey";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

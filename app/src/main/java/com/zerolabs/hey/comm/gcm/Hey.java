@@ -69,5 +69,7 @@ public class Hey {
     }
 
 
+    public Bundle getBundle() { return mHeyData; }
+
 
 }

@@ -91,6 +91,7 @@ public class GCMIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent contentIntent = new Intent(this, MainActivity.class);
+        contentIntent.putExtra(MainActivity.KEY_HEY, hey.getBundle());
 
         String msg = sender.getUsername() + " sent you a hey!";
 
@@ -98,7 +99,7 @@ public class GCMIntentService extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setContentTitle("hey!")
                         .setContentText(msg)
-                    .setSmallIcon(R.drawable.ic_launcher);
+                    .setSmallIcon(R.drawable.com_facebook_button_check);
 
         Log.d(LOG_TAG, "A notification should pop up!");
 
