@@ -35,7 +35,10 @@ public class MeetActivity extends Activity {
             public void onReceive(Context context, Intent intent) {
                 Bundle talkData = intent.getBundleExtra(GCMIntentService.TALK_MESSAGE);
                 Talk talk = new Talk(talkData);
-                if (chatPartner == null) chatPartner = talk.getSender();
+                if (chatPartner == null) {
+                    chatPartner = talk.getSender();
+                    updateViews();
+                }
                 addTextToChat(talk.getText(), false);
             }
         };
@@ -49,6 +52,13 @@ public class MeetActivity extends Activity {
         mChatEditText = (EditText)findViewById(R.id.chat_edittext);
         mFacebookSession = Session.getActiveSession();
         mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
+    }
+
+    private void updateViews() {
+        mUserNameTextView.setText(chatPartner.getUsername() + ", " + chatPartner.getAge());
+        mLocationTextView.setText(chatPartner.getCity());
+        mGenderTextView.setText(chatPartner.isMale() ? "man" : "woman");
+        mProfilePictureView.setProfileId(chatPartner.getUserId());
     }
 
     User chatPartner;
