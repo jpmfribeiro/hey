@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
                     Intent meetIntent = new Intent(getApplicationContext(), MeetActivity.class);
                     startActivity(meetIntent);
                 } else {
-
+                    mFragment.registerIncomingHey(hey.getSender());
                 }
 
             }
