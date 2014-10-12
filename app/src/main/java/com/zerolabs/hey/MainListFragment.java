@@ -34,6 +34,7 @@ public class MainListFragment extends Fragment {
         wlanp2PDiscovery.automateDiscovery(new WLANP2PDiscovery.MACListener() {
             @Override
             public void MACReturn(List<String> MACList) {
+                if(MACList == null || MACList.isEmpty()) return;
                 mServerComm.getUsersFromMacAddresses(MACList, new ServerComm.OnGetUsersListener() {
                     @Override
                     public void onResponse(boolean successful, List<User> retrievedUsers) {

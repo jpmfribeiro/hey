@@ -17,13 +17,13 @@ import com.zerolabs.hey.model.User;
 import java.util.List;
 
 public class DiscoveryService extends Service {
-    public DiscoveryService() {
-        wlanp2PDiscovery = new WLANP2PDiscovery(this);
+/*    public DiscoveryService() {
+//        wlanp2PDiscovery = new WLANP2PDiscovery(this);
         wlanp2PDiscovery.initialize();
         wlanp2PDiscovery.automateDiscovery(macListener, 10000);
         serverComm = new ServerComm(service);
     }
-
+*/
     WLANP2PDiscovery wlanp2PDiscovery;
     ServerComm serverComm;
     Service service = this;
@@ -31,15 +31,21 @@ public class DiscoveryService extends Service {
     WLANP2PDiscovery.MACListener macListener = new WLANP2PDiscovery.MACListener() {
         @Override
         public void MACReturn(List<String> MACList) {
+
+            if(MACList == null || MACList.isEmpty()) return;
+
             serverComm.getUsersFromMacAddresses(MACList, new ServerComm.OnGetUsersListener() {
                 @Override
                 public void onResponse(boolean successful, List<User> retrievedUsers) {
-                    if(successful && retrievedUsers.size()>0) {
+                    if(retrievedUsers != null && successful && retrievedUsers.size()>0) {
                         NotificationCompat.Builder mBuilder =
                                 new NotificationCompat.Builder(service)
                                         .setSmallIcon(R.drawable.ic_launcher)
                                         .setContentTitle("There are friendly people near you")
                                         .setContentText(retrievedUsers.get(0).getUsername());
+
+                        //Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(VIBRATOR_SERVICE);
+                        //vibrator.vibrate(500);
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(service);
 // Adds the back stack for the Intent (but not the Intent itself)
@@ -70,6 +76,19 @@ public class DiscoveryService extends Service {
         }
     };
 
+    boolean isActive;
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if(!isActive) {
+            wlanp2PDiscovery = new WLANP2PDiscovery(this);
+            wlanp2PDiscovery.initialize();
+            wlanp2PDiscovery.automateDiscovery(macListener, 10000);
+            serverComm = new ServerComm(service);
+            isActive = true;
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {

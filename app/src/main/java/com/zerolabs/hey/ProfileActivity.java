@@ -96,7 +96,10 @@ public class ProfileActivity extends Activity {
             mServerComm.getFacebookData(mFacebookSession, new ServerComm.OnGetFacebookDataListener() {
                 @Override
                 public void onResponse(User user) {
-                    mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
+                    if(user.getAge()!=-1)
+                        mUserNameTextView.setText(user.getUsername() + ", " + user.getAge());
+                    else
+                        mUserNameTextView.setText(user.getUsername());
                     mLocationTextView.setText(user.getCity());
                     mGenderTextView.setText(user.isMale() ? "man" : "woman");
                     mProfilePictureView.setProfileId(user.getUserId());

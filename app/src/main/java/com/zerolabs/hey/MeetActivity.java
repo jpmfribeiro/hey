@@ -52,7 +52,7 @@ public class MeetActivity extends Activity {
         if (intent != null) {
             Bundle userData = intent.getBundleExtra(KEY_PARTNER);
             chatPartner = new User();
-            chatPartner.setGender(userData.getString(User.JSONRep.KEY_GENDER).equals(User.JSONRep.VALUE_MALE));
+            chatPartner.setGender(userData.getString(User.JSONRep.KEY_GENDER).equalsIgnoreCase(User.JSONRep.VALUE_MALE));
             chatPartner.setUserId(userData.getString(User.JSONRep.KEY_USERID));
             chatPartner.setUsername(userData.getString(User.JSONRep.KEY_USERNAME));
             chatPartner.setCity(userData.getString(User.JSONRep.KEY_CITY));
