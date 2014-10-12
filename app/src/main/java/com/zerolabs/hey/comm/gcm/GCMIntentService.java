@@ -47,7 +47,7 @@ public class GCMIntentService extends IntentService {
     public void sendResult(Talk talk) {
         Intent intent = new Intent(TALK_RESULT);
         if (talk != null)
-            intent.putExtra(TALK_MESSAGE, talk.getText());
+            intent.putExtra(TALK_MESSAGE, talk.getBundle());
         broadcaster.sendBroadcast(intent);
     }
 
@@ -92,7 +92,7 @@ public class GCMIntentService extends IntentService {
                     receiveHey(hey);
                 } else {
                     Talk talk = new Talk(extras);
-                    Log.d(LOG_TAG, "Received a Talk, will forward it to ChatActivity");
+                    Log.d(LOG_TAG, "Received a Talk, will forward it to MeetActivity");
                     sendResult(talk);
                 }
 

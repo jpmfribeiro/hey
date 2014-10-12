@@ -1,7 +1,12 @@
 package com.zerolabs.hey;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +19,9 @@ import android.widget.TextView;
 import com.facebook.Session;
 import com.facebook.widget.ProfilePictureView;
 import com.zerolabs.hey.comm.ServerComm;
+import com.zerolabs.hey.comm.gcm.GCMIntentService;
+import com.zerolabs.hey.comm.gcm.Talk;
+import com.zerolabs.hey.model.User;
 
 
 public class MeetActivity extends Activity {
@@ -32,9 +40,33 @@ public class MeetActivity extends Activity {
         mChatEditText = (EditText)findViewById(R.id.chat_edittext);
         mFacebookSession = Session.getActiveSession();
         mChatHistoryContainer = (ViewGroup)findViewById(R.id.chat_history);
+
         mScrollView = (ScrollView)findViewById(R.id.bigScrollView);
+
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Bundle talkData = intent.getBundleExtra(GCMIntentService.TALK_MESSAGE);
+                Talk talk = new Talk(talkData);
+                if (chatPartner == null) {
+                    chatPartner = talk.getSender();
+                    updateViews();
+                }
+                addTextToChat(talk.getText(), false);
+            }
+        };
     }
 
+    private void updateViews() {
+        mUserNameTextView.setText(chatPartner.getUsername() + ", " + chatPartner.getAge());
+        mLocationTextView.setText(chatPartner.getCity());
+        mGenderTextView.setText(chatPartner.isMale() ? "man" : "woman");
+        mProfilePictureView.setProfileId(chatPartner.getUserId());
+    }
+
+    User chatPartner;
+    BroadcastReceiver receiver;
     ServerComm mServerComm;
     TextView mUserNameTextView;
     TextView mLocationTextView;
@@ -84,5 +116,17 @@ public class MeetActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(GCMIntentService.TALK_RESULT));
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 }
